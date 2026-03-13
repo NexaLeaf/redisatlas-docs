@@ -1,0 +1,731 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>RedisAtlas — Self-Hosted Redis UI</title>
+  <meta name="description" content="Production-grade self-hosted Redis UI. Browse keys, monitor metrics, run commands — one Docker command." />
+  <meta property="og:title" content="RedisAtlas — Self-Hosted Redis UI" />
+  <meta property="og:description" content="Production-grade self-hosted Redis UI. One Docker command. No SaaS. No data leaving your network." />
+  <meta property="og:image" content="https://nexaleaf.github.io/redisatlas/og.png" />
+  <meta name="twitter:card" content="summary_large_image" />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;600&display=swap" rel="stylesheet" />
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    :root {
+      --red:    #e53e3e;
+      --red-d:  #c53030;
+      --bg:     #0a0a0f;
+      --bg2:    #111118;
+      --bg3:    #1a1a24;
+      --border: #2a2a3a;
+      --text:   #e2e8f0;
+      --muted:  #718096;
+      --green:  #48bb78;
+      --blue:   #4299e1;
+    }
+
+    html { scroll-behavior: smooth; }
+
+    body {
+      font-family: 'Inter', sans-serif;
+      background: var(--bg);
+      color: var(--text);
+      line-height: 1.6;
+    }
+
+    /* ── NAV ── */
+    nav {
+      position: fixed; top: 0; left: 0; right: 0; z-index: 100;
+      display: flex; align-items: center; justify-content: space-between;
+      padding: 0 2rem; height: 60px;
+      background: rgba(10,10,15,0.85);
+      backdrop-filter: blur(12px);
+      border-bottom: 1px solid var(--border);
+    }
+    .nav-logo { display: flex; align-items: center; gap: 10px; font-weight: 700; font-size: 1.1rem; text-decoration: none; color: var(--text); }
+    .nav-logo span { color: var(--red); }
+    .nav-links { display: flex; gap: 2rem; list-style: none; }
+    .nav-links a { color: var(--muted); text-decoration: none; font-size: 0.9rem; font-weight: 500; transition: color 0.2s; }
+    .nav-links a:hover { color: var(--text); }
+    .nav-cta {
+      background: var(--red); color: #fff; padding: 0.4rem 1.1rem;
+      border-radius: 6px; font-size: 0.85rem; font-weight: 600;
+      text-decoration: none; transition: background 0.2s;
+    }
+    .nav-cta:hover { background: var(--red-d); }
+
+    /* ── HERO ── */
+    .hero {
+      min-height: 100vh;
+      display: flex; flex-direction: column; align-items: center; justify-content: center;
+      text-align: center; padding: 6rem 2rem 4rem;
+      background: radial-gradient(ellipse 80% 60% at 50% 0%, rgba(229,62,62,0.12) 0%, transparent 70%);
+    }
+    .hero-badge {
+      display: inline-flex; align-items: center; gap: 6px;
+      background: rgba(229,62,62,0.1); border: 1px solid rgba(229,62,62,0.3);
+      color: #fc8181; padding: 0.3rem 0.9rem; border-radius: 999px;
+      font-size: 0.8rem; font-weight: 600; letter-spacing: 0.05em;
+      text-transform: uppercase; margin-bottom: 1.5rem;
+    }
+    .hero h1 {
+      font-size: clamp(2.5rem, 7vw, 5rem);
+      font-weight: 800; line-height: 1.1;
+      letter-spacing: -0.03em; margin-bottom: 1.2rem;
+    }
+    .hero h1 span { color: var(--red); }
+    .hero p {
+      font-size: clamp(1rem, 2.5vw, 1.25rem);
+      color: var(--muted); max-width: 600px; margin-bottom: 2.5rem;
+    }
+    .hero-actions { display: flex; gap: 1rem; flex-wrap: wrap; justify-content: center; margin-bottom: 3rem; }
+    .btn-primary {
+      background: var(--red); color: #fff; padding: 0.75rem 1.75rem;
+      border-radius: 8px; font-weight: 600; font-size: 1rem;
+      text-decoration: none; transition: background 0.2s, transform 0.1s;
+    }
+    .btn-primary:hover { background: var(--red-d); transform: translateY(-1px); }
+    .btn-outline {
+      background: transparent; color: var(--text);
+      border: 1px solid var(--border); padding: 0.75rem 1.75rem;
+      border-radius: 8px; font-weight: 600; font-size: 1rem;
+      text-decoration: none; transition: border-color 0.2s, transform 0.1s;
+    }
+    .btn-outline:hover { border-color: var(--text); transform: translateY(-1px); }
+
+    /* ── CODE BLOCK ── */
+    .code-block {
+      background: var(--bg2); border: 1px solid var(--border);
+      border-radius: 12px; padding: 1.5rem 2rem;
+      font-family: 'JetBrains Mono', monospace; font-size: 0.85rem;
+      text-align: left; max-width: 640px; width: 100%;
+      position: relative; line-height: 1.8;
+    }
+    .code-block .comment { color: #4a5568; }
+    .code-block .cmd { color: #68d391; }
+    .code-block .flag { color: #76e4f7; }
+    .code-block .val { color: #fbb6ce; }
+    .copy-btn {
+      position: absolute; top: 0.75rem; right: 0.75rem;
+      background: var(--bg3); border: 1px solid var(--border);
+      color: var(--muted); padding: 0.25rem 0.6rem;
+      border-radius: 5px; font-size: 0.75rem; cursor: pointer;
+      font-family: 'Inter', sans-serif; transition: color 0.2s;
+    }
+    .copy-btn:hover { color: var(--text); }
+
+    /* ── BADGES ── */
+    .badges { display: flex; gap: 0.5rem; flex-wrap: wrap; justify-content: center; margin-bottom: 1rem; }
+    .badges img { height: 20px; }
+
+    /* ── SECTION ── */
+    section { padding: 5rem 2rem; }
+    .container { max-width: 1100px; margin: 0 auto; }
+    .section-label {
+      font-size: 0.75rem; font-weight: 700; letter-spacing: 0.1em;
+      text-transform: uppercase; color: var(--red); margin-bottom: 0.75rem;
+    }
+    .section-title {
+      font-size: clamp(1.75rem, 4vw, 2.5rem); font-weight: 800;
+      letter-spacing: -0.02em; margin-bottom: 1rem;
+    }
+    .section-sub { color: var(--muted); font-size: 1.05rem; max-width: 560px; }
+
+    /* ── FEATURES GRID ── */
+    .features-grid {
+      display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+      gap: 1.25rem; margin-top: 3rem;
+    }
+    .feature-card {
+      background: var(--bg2); border: 1px solid var(--border);
+      border-radius: 12px; padding: 1.5rem;
+      transition: border-color 0.2s, transform 0.2s;
+    }
+    .feature-card:hover { border-color: rgba(229,62,62,0.4); transform: translateY(-2px); }
+    .feature-icon { font-size: 1.75rem; margin-bottom: 0.75rem; }
+    .feature-card h3 { font-size: 1rem; font-weight: 700; margin-bottom: 0.4rem; }
+    .feature-card p { color: var(--muted); font-size: 0.9rem; }
+
+    /* ── SCREENSHOTS ── */
+    .screenshots-grid {
+      display: grid; grid-template-columns: repeat(auto-fit, minmax(460px, 1fr));
+      gap: 1.5rem; margin-top: 3rem;
+    }
+    .screenshot-card {
+      background: var(--bg2); border: 1px solid var(--border);
+      border-radius: 14px; overflow: hidden;
+      transition: border-color 0.2s, transform 0.2s;
+    }
+    .screenshot-card:hover { border-color: rgba(229,62,62,0.4); transform: translateY(-3px); }
+    .screenshot-card .caption {
+      padding: 0.85rem 1.1rem;
+      font-size: 0.85rem; font-weight: 600; color: var(--muted);
+      border-top: 1px solid var(--border);
+      display: flex; align-items: center; gap: 0.5rem;
+    }
+    .screenshot-placeholder {
+      width: 100%; aspect-ratio: 16/9;
+      background: var(--bg3);
+      display: flex; flex-direction: column; align-items: center; justify-content: center;
+      gap: 0.75rem; color: var(--border);
+      font-family: 'JetBrains Mono', monospace; font-size: 0.8rem;
+      border-bottom: 1px dashed var(--border);
+      position: relative; overflow: hidden;
+    }
+    .screenshot-placeholder::before {
+      content: ''; position: absolute; inset: 0;
+      background: repeating-linear-gradient(
+        45deg, transparent, transparent 20px,
+        rgba(255,255,255,0.01) 20px, rgba(255,255,255,0.01) 40px
+      );
+    }
+    .screenshot-placeholder .ph-icon { font-size: 2.5rem; opacity: 0.3; }
+    .screenshot-placeholder .ph-label { opacity: 0.4; letter-spacing: 0.05em; }
+    .screenshot-placeholder img {
+      width: 100%; height: 100%; object-fit: cover; display: block;
+    }
+    /* Hero preview */
+    .hero-preview {
+      width: 100%; max-width: 900px;
+      background: var(--bg2); border: 1px solid var(--border);
+      border-radius: 14px; overflow: hidden; margin-top: 3rem;
+    }
+    .hero-preview-bar {
+      background: var(--bg3); padding: 0.6rem 1rem;
+      display: flex; align-items: center; gap: 0.5rem;
+      border-bottom: 1px solid var(--border);
+    }
+    .hero-preview-bar span {
+      width: 12px; height: 12px; border-radius: 50%; display: inline-block;
+    }
+    .dot-red { background: #ff5f57; }
+    .dot-yellow { background: #febc2e; }
+    .dot-green { background: #28c840; }
+    .hero-preview-content {
+      aspect-ratio: 16/9;
+      display: flex; align-items: center; justify-content: center;
+      flex-direction: column; gap: 0.75rem;
+      background: var(--bg3); color: var(--border);
+      font-family: 'JetBrains Mono', monospace; font-size: 0.85rem;
+      position: relative; overflow: hidden;
+    }
+    .hero-preview-content::before {
+      content: ''; position: absolute; inset: 0;
+      background: repeating-linear-gradient(
+        45deg, transparent, transparent 20px,
+        rgba(255,255,255,0.01) 20px, rgba(255,255,255,0.01) 40px
+      );
+    }
+    .hero-preview-content .ph-icon { font-size: 3rem; opacity: 0.2; }
+    .hero-preview-content .ph-label { opacity: 0.35; letter-spacing: 0.05em; }
+    .hero-preview-content img { width: 100%; height: 100%; object-fit: cover; display: block; position: absolute; inset: 0; }
+
+    /* ── INSTALL TABS ── */
+    .install-section { background: var(--bg2); border-top: 1px solid var(--border); border-bottom: 1px solid var(--border); }
+    .tabs { display: flex; gap: 0; border-bottom: 1px solid var(--border); margin-bottom: 2rem; }
+    .tab {
+      padding: 0.75rem 1.5rem; font-size: 0.9rem; font-weight: 600;
+      color: var(--muted); cursor: pointer; border-bottom: 2px solid transparent;
+      transition: color 0.2s; background: none; border-top: none; border-left: none; border-right: none;
+      font-family: 'Inter', sans-serif;
+    }
+    .tab.active { color: var(--text); border-bottom-color: var(--red); }
+    .tab-content { display: none; }
+    .tab-content.active { display: block; }
+
+    /* ── ARCH ── */
+    .arch-diagram {
+      background: var(--bg2); border: 1px solid var(--border);
+      border-radius: 12px; padding: 2rem;
+      font-family: 'JetBrains Mono', monospace; font-size: 0.8rem;
+      line-height: 2; color: var(--muted); overflow-x: auto;
+    }
+    .arch-diagram .highlight { color: var(--green); }
+    .arch-diagram .dim { color: #2d3748; }
+
+    /* ── STACK ── */
+    .stack-grid {
+      display: grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+      gap: 1rem; margin-top: 2.5rem;
+    }
+    .stack-card {
+      background: var(--bg2); border: 1px solid var(--border);
+      border-radius: 10px; padding: 1.25rem;
+    }
+    .stack-card h4 { font-size: 0.75rem; text-transform: uppercase; letter-spacing: 0.08em; color: var(--red); margin-bottom: 0.75rem; }
+    .stack-card ul { list-style: none; }
+    .stack-card li { font-size: 0.9rem; color: var(--muted); padding: 0.2rem 0; }
+    .stack-card li::before { content: "→ "; color: var(--border); }
+
+    /* ── ENV TABLE ── */
+    table { width: 100%; border-collapse: collapse; margin-top: 2rem; font-size: 0.9rem; }
+    th { text-align: left; padding: 0.75rem 1rem; background: var(--bg3); color: var(--muted); font-size: 0.75rem; text-transform: uppercase; letter-spacing: 0.08em; }
+    td { padding: 0.75rem 1rem; border-bottom: 1px solid var(--border); }
+    td code { font-family: 'JetBrains Mono', monospace; font-size: 0.82rem; background: var(--bg3); padding: 0.15rem 0.4rem; border-radius: 4px; color: #fbb6ce; }
+    tr:last-child td { border-bottom: none; }
+
+    /* ── ROLES ── */
+    .roles-table td:nth-child(2), .roles-table td:nth-child(3) { text-align: center; }
+
+    /* ── FOOTER ── */
+    footer {
+      text-align: center; padding: 3rem 2rem;
+      border-top: 1px solid var(--border); color: var(--muted); font-size: 0.85rem;
+    }
+    footer a { color: var(--muted); text-decoration: none; }
+    footer a:hover { color: var(--text); }
+    .footer-links { display: flex; gap: 1.5rem; justify-content: center; margin-bottom: 1rem; flex-wrap: wrap; }
+
+    /* ── RESPONSIVE ── */
+    @media (max-width: 640px) {
+      .nav-links { display: none; }
+      .hero-actions { flex-direction: column; align-items: center; }
+    }
+  </style>
+</head>
+<body>
+
+<!-- NAV -->
+<nav>
+  <a class="nav-logo" href="#"><span>Redis</span>Atlas</a>
+  <ul class="nav-links">
+    <li><a href="#features">Features</a></li>
+    <li><a href="#screenshots">Screenshots</a></li>
+    <li><a href="#install">Install</a></li>
+    <li><a href="#architecture">Architecture</a></li>
+    <li><a href="#config">Config</a></li>
+  </ul>
+  <a class="nav-cta" href="https://hub.docker.com/r/nexaleaf/redisatlas" target="_blank">Docker Hub</a>
+</nav>
+
+<!-- HERO -->
+<section class="hero">
+  <div class="hero-badge">🚀 Open Source · Self-Hosted</div>
+  <h1>The Redis UI you<br/><span>actually own</span></h1>
+  <p>Production-grade Redis management — browse 100M+ keys, monitor metrics in real-time, manage teams. One Docker command. No SaaS. No data leaving your network.</p>
+
+  <div class="badges">
+    <img src="https://img.shields.io/docker/pulls/nexaleaf/redisatlas?color=0db7ed&logo=docker&logoColor=white&style=flat-square" alt="Docker Pulls" />
+    <img src="https://img.shields.io/docker/image-size/nexaleaf/redisatlas/latest?color=0db7ed&logo=docker&logoColor=white&style=flat-square" alt="Image Size" />
+    <img src="https://img.shields.io/badge/license-MIT-green?style=flat-square" alt="License" />
+    <img src="https://img.shields.io/badge/node-24-brightgreen?logo=node.js&logoColor=white&style=flat-square" alt="Node" />
+    <img src="https://img.shields.io/badge/platforms-amd64%20%7C%20arm64-blue?style=flat-square" alt="Platforms" />
+  </div>
+
+  <div class="hero-actions">
+    <a class="btn-primary" href="#install">Get Started</a>
+    <a class="btn-outline" href="https://hub.docker.com/r/nexaleaf/redisatlas" target="_blank">View on Docker Hub</a>
+  </div>
+
+  <div class="code-block">
+    <button class="copy-btn" onclick="copyHero()">Copy</button>
+    <div><span class="comment"># Run RedisAtlas in seconds</span></div>
+    <div><span class="cmd">docker run</span> <span class="flag">-d</span> \</div>
+    <div>  <span class="flag">-p</span> <span class="val">8080:80</span> \</div>
+    <div>  <span class="flag">-e</span> <span class="val">JWT_SECRET=change-me</span> \</div>
+    <div>  <span class="flag">-e</span> <span class="val">ADMIN_PASSWORD=change-me</span> \</div>
+    <div>  <span class="flag">-v</span> <span class="val">redisatlas_data:/app/backend/data</span> \</div>
+    <div>  <span class="val">nexaleaf/redisatlas:latest</span></div>
+  </div>
+
+  <!-- HERO PREVIEW — replace src with docs/screenshots/hero.png -->
+  <div class="hero-preview">
+    <div class="hero-preview-bar">
+      <span class="dot-red"></span>
+      <span class="dot-yellow"></span>
+      <span class="dot-green"></span>
+    </div>
+    <div class="hero-preview-content">
+      <img src="screenshots/dashboard.png" alt="RedisAtlas Dashboard" />
+    </div>
+  </div>
+</section>
+
+<!-- FEATURES -->
+<section id="features">
+  <div class="container">
+    <div class="section-label">Features</div>
+    <h2 class="section-title">Everything you need to manage Redis</h2>
+    <p class="section-sub">Built for engineers who want full visibility into their Redis clusters without compromising on security.</p>
+
+    <div class="features-grid">
+      <div class="feature-card">
+        <div class="feature-icon">🔑</div>
+        <h3>Key Explorer</h3>
+        <p>Browse, search, create, edit, and delete keys with bulk operations. Handles 100M+ keys with cursor-based pagination.</p>
+      </div>
+      <div class="feature-card">
+        <div class="feature-icon">📊</div>
+        <h3>Real-time Dashboard</h3>
+        <p>Live server metrics, memory usage, connected clients, and hit/miss ratios streamed over WebSocket.</p>
+      </div>
+      <div class="feature-card">
+        <div class="feature-icon">💻</div>
+        <h3>Redis Console</h3>
+        <p>Execute raw Redis commands directly with syntax highlighting and command history.</p>
+      </div>
+      <div class="feature-card">
+        <div class="feature-icon">📈</div>
+        <h3>Analytics</h3>
+        <p>Key type distribution, expiry analysis, and namespace breakdown visualized with interactive charts.</p>
+      </div>
+      <div class="feature-card">
+        <div class="feature-icon">🐢</div>
+        <h3>Slow Log</h3>
+        <p>Visualize slow queries, identify bottlenecks, and optimize your Redis usage.</p>
+      </div>
+      <div class="feature-card">
+        <div class="feature-icon">📡</div>
+        <h3>Pub/Sub</h3>
+        <p>Publish messages and subscribe to channels and patterns in real time from the browser.</p>
+      </div>
+      <div class="feature-card">
+        <div class="feature-icon">📦</div>
+        <h3>Size Analysis</h3>
+        <p>Find your biggest keys and memory hogs. Understand what's consuming your Redis memory.</p>
+      </div>
+      <div class="feature-card">
+        <div class="feature-icon">🔗</div>
+        <h3>Multi-Connection</h3>
+        <p>Manage multiple Redis servers simultaneously from a single interface.</p>
+      </div>
+      <div class="feature-card">
+        <div class="feature-icon">👥</div>
+        <h3>User Management</h3>
+        <p>Role-based access control with admin and viewer roles. Invite team members securely.</p>
+      </div>
+      <div class="feature-card">
+        <div class="feature-icon">🔒</div>
+        <h3>HTTP &amp; HTTPS</h3>
+        <p>Auto-detects cert mount and switches modes. Works plain HTTP out of the box, TLS when certs are provided.</p>
+      </div>
+      <div class="feature-card">
+        <div class="feature-icon">⚙️</div>
+        <h3>Config Viewer</h3>
+        <p>Inspect the full Redis server configuration without needing CLI access.</p>
+      </div>
+      <div class="feature-card">
+        <div class="feature-icon">🏗️</div>
+        <h3>Single Container</h3>
+        <p>Frontend, backend, and nginx all in one image. No orchestration required for simple deployments.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- SCREENSHOTS -->
+<section id="screenshots" style="background: var(--bg2); border-top: 1px solid var(--border);">
+  <div class="container">
+    <div class="section-label">Screenshots</div>
+    <h2 class="section-title">See it in action</h2>
+    <p class="section-sub">Drop your screenshots into <code style="font-family:monospace;background:var(--bg3);padding:0.1rem 0.4rem;border-radius:4px;font-size:0.9rem;">docs/screenshots/</code> and uncomment the img tags below.</p>
+
+    <div class="screenshots-grid">
+
+      <div class="screenshot-card">
+        <div class="screenshot-placeholder">
+          <img src="screenshots/login.png" alt="Login" />
+        </div>
+        <div class="caption">🔐 Login</div>
+      </div>
+
+      <div class="screenshot-card">
+        <div class="screenshot-placeholder">
+          <img src="screenshots/dashboard.png" alt="Dashboard" />
+        </div>
+        <div class="caption">📊 Real-time Dashboard</div>
+      </div>
+
+      <div class="screenshot-card">
+        <div class="screenshot-placeholder">
+          <img src="screenshots/key-explorer.png" alt="Key Explorer" />
+        </div>
+        <div class="caption">🔑 Key Explorer</div>
+      </div>
+
+      <div class="screenshot-card">
+        <div class="screenshot-placeholder">
+          <img src="screenshots/console.png" alt="Redis Console" />
+        </div>
+        <div class="caption">💻 Redis Console</div>
+      </div>
+
+      <div class="screenshot-card">
+        <div class="screenshot-placeholder">
+          <img src="screenshots/analytics.png" alt="Analytics" />
+        </div>
+        <div class="caption">📈 Analytics</div>
+      </div>
+
+      <div class="screenshot-card">
+        <div class="screenshot-placeholder">
+          <img src="screenshots/pubsub.png" alt="Pub/Sub" />
+        </div>
+        <div class="caption">📡 Pub/Sub</div>
+      </div>
+
+      <div class="screenshot-card">
+        <div class="screenshot-placeholder">
+          <img src="screenshots/users.png" alt="User Management" />
+        </div>
+        <div class="caption">👥 User Management</div>
+      </div>
+
+    </div>
+  </div>
+</section>
+
+<!-- INSTALL -->
+<section id="install" class="install-section">
+  <div class="container">
+    <div class="section-label">Installation</div>
+    <h2 class="section-title">Up and running in seconds</h2>
+    <p class="section-sub">Choose your preferred deployment method.</p>
+
+    <div style="margin-top: 2.5rem;">
+      <div class="tabs">
+        <button class="tab active" onclick="switchTab('http')">HTTP (Quick Start)</button>
+        <button class="tab" onclick="switchTab('https')">HTTPS</button>
+        <button class="tab" onclick="switchTab('compose')">Docker Compose</button>
+      </div>
+
+      <div id="tab-http" class="tab-content active">
+        <p style="color: var(--muted); margin-bottom: 1.5rem;">Zero config. No certs needed. Perfect for local development.</p>
+        <div class="code-block" style="max-width: 100%;">
+          <button class="copy-btn" onclick="copyTab('http')">Copy</button>
+          <div><span class="cmd">docker run</span> <span class="flag">-d</span> \</div>
+          <div>  <span class="flag">--name</span> redisatlas \</div>
+          <div>  <span class="flag">-p</span> <span class="val">8080:80</span> \</div>
+          <div>  <span class="flag">-e</span> <span class="val">JWT_SECRET=your-secret</span> \</div>
+          <div>  <span class="flag">-e</span> <span class="val">ADMIN_PASSWORD=your-password</span> \</div>
+          <div>  <span class="flag">-v</span> <span class="val">redisatlas_data:/app/backend/data</span> \</div>
+          <div>  <span class="flag">--restart</span> unless-stopped \</div>
+          <div>  <span class="val">nexaleaf/redisatlas:latest</span></div>
+        </div>
+        <p style="margin-top: 1.25rem; color: var(--muted);">Open <a href="http://localhost:8080" style="color: var(--blue);">http://localhost:8080</a> and log in with your <code style="font-family: monospace; background: var(--bg3); padding: 0.1rem 0.4rem; border-radius: 4px;">ADMIN_PASSWORD</code>.</p>
+      </div>
+
+      <div id="tab-https" class="tab-content">
+        <p style="color: var(--muted); margin-bottom: 1.5rem;">Mount a cert pair — the image switches to HTTPS automatically.</p>
+        <div class="code-block" style="max-width: 100%;">
+          <div><span class="comment"># Step 1: Install mkcert and generate certs</span></div>
+          <div><span class="cmd">brew install</span> mkcert <span class="flag">&amp;&amp;</span> <span class="cmd">mkcert -install</span></div>
+          <div><span class="cmd">mkdir -p</span> certs</div>
+          <div><span class="cmd">mkcert</span> <span class="flag">-cert-file</span> certs/localhost.pem \</div>
+          <div>       <span class="flag">-key-file</span> certs/localhost-key.pem localhost 127.0.0.1</div>
+          <br/>
+          <div><span class="comment"># Step 2: Run with certs mounted</span></div>
+          <div><span class="cmd">docker run</span> <span class="flag">-d</span> \</div>
+          <div>  <span class="flag">--name</span> redisatlas \</div>
+          <div>  <span class="flag">-p</span> <span class="val">8080:80</span> <span class="flag">-p</span> <span class="val">8443:443</span> \</div>
+          <div>  <span class="flag">-e</span> <span class="val">JWT_SECRET=your-secret</span> \</div>
+          <div>  <span class="flag">-e</span> <span class="val">ADMIN_PASSWORD=your-password</span> \</div>
+          <div>  <span class="flag">-v</span> <span class="val">$(pwd)/certs:/etc/nginx/certs:ro</span> \</div>
+          <div>  <span class="flag">-v</span> <span class="val">redisatlas_data:/app/backend/data</span> \</div>
+          <div>  <span class="val">nexaleaf/redisatlas:latest</span></div>
+        </div>
+        <p style="margin-top: 1.25rem; color: var(--muted);">Open <a href="https://localhost:8443" style="color: var(--blue);">https://localhost:8443</a> — padlock, no browser warnings.</p>
+      </div>
+
+      <div id="tab-compose" class="tab-content">
+        <p style="color: var(--muted); margin-bottom: 1.5rem;">Recommended for persistent deployments.</p>
+        <div class="code-block" style="max-width: 100%;">
+          <div><span class="comment"># docker-compose.yml</span></div>
+          <div><span class="flag">services:</span></div>
+          <div>  <span class="cmd">redisatlas:</span></div>
+          <div>    <span class="flag">image:</span> <span class="val">nexaleaf/redisatlas:latest</span></div>
+          <div>    <span class="flag">ports:</span></div>
+          <div>      - <span class="val">'8080:80'</span></div>
+          <div>    <span class="flag">volumes:</span></div>
+          <div>      - <span class="val">redisatlas_data:/app/backend/data</span></div>
+          <div>    <span class="flag">environment:</span></div>
+          <div>      - <span class="val">JWT_SECRET=change-me</span></div>
+          <div>      - <span class="val">ADMIN_PASSWORD=change-me</span></div>
+          <div>    <span class="flag">restart:</span> unless-stopped</div>
+          <br/>
+          <div><span class="flag">volumes:</span></div>
+          <div>  <span class="cmd">redisatlas_data:</span></div>
+        </div>
+        <div style="margin-top: 1rem;">
+          <div class="code-block" style="max-width: 100%;">
+            <div><span class="cmd">docker compose up</span> <span class="flag">-d</span></div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ARCHITECTURE -->
+<section id="architecture">
+  <div class="container">
+    <div class="section-label">Architecture</div>
+    <h2 class="section-title">How it works</h2>
+    <p class="section-sub">Three processes in one container, managed by supervisord. Simple to deploy, easy to understand.</p>
+
+    <div class="arch-diagram" style="margin-top: 2.5rem;">
+      <div>Browser</div>
+      <div>  │</div>
+      <div>  ├─── <span class="highlight">HTTPS :8443</span> ──▶ nginx (TLS termination)</div>
+      <div>  │                        │</div>
+      <div>  │                        ├─ /api/*      ──▶ <span class="highlight">NestJS :3001</span></div>
+      <div>  │                        ├─ /ws/*       ──▶ <span class="highlight">NestJS :3001</span> (WebSocket)</div>
+      <div>  │                        └─ /*          ──▶ <span class="highlight">Next.js :3000</span></div>
+      <div>  │</div>
+      <div>  └─── <span class="highlight">HTTP  :8080</span> ──▶ nginx (HTTP mode, no certs required)</div>
+      <div>                           │</div>
+      <div>                           ├─ /api/*      ──▶ <span class="highlight">NestJS :3001</span></div>
+      <div>                           └─ /*          ──▶ <span class="highlight">Next.js :3000</span></div>
+    </div>
+
+    <div class="stack-grid">
+      <div class="stack-card">
+        <h4>Frontend</h4>
+        <ul>
+          <li>Next.js 15</li>
+          <li>React 19</li>
+          <li>TypeScript</li>
+          <li>Tailwind CSS</li>
+          <li>Recharts</li>
+          <li>Socket.io client</li>
+        </ul>
+      </div>
+      <div class="stack-card">
+        <h4>Backend</h4>
+        <ul>
+          <li>NestJS 11</li>
+          <li>TypeScript</li>
+          <li>ioredis</li>
+          <li>Socket.io</li>
+          <li>JWT auth</li>
+          <li>SQLite (WASM)</li>
+        </ul>
+      </div>
+      <div class="stack-card">
+        <h4>Infrastructure</h4>
+        <ul>
+          <li>Docker</li>
+          <li>nginx</li>
+          <li>supervisord</li>
+          <li>Node.js 24</li>
+          <li>linux/amd64</li>
+          <li>linux/arm64</li>
+        </ul>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- CONFIG -->
+<section id="config" style="background: var(--bg2); border-top: 1px solid var(--border);">
+  <div class="container">
+    <div class="section-label">Configuration</div>
+    <h2 class="section-title">Environment variables</h2>
+
+    <table>
+      <thead>
+        <tr>
+          <th>Variable</th>
+          <th>Default</th>
+          <th>Description</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td><code>JWT_SECRET</code></td>
+          <td><code>—</code></td>
+          <td>Required. Secret used to sign auth tokens. Use a long random string in production.</td>
+        </tr>
+        <tr>
+          <td><code>ADMIN_PASSWORD</code></td>
+          <td><code>—</code></td>
+          <td>Required. Password for the default admin account, seeded on first boot.</td>
+        </tr>
+        <tr>
+          <td><code>COOKIE_SECURE</code></td>
+          <td>auto</td>
+          <td>Set automatically by entrypoint. <code>true</code> in HTTPS mode, <code>false</code> in HTTP mode.</td>
+        </tr>
+        <tr>
+          <td><code>DB_PATH</code></td>
+          <td><code>/app/backend/data/redisatlas.db</code></td>
+          <td>Path to the SQLite database file. Mount a volume here for persistence.</td>
+        </tr>
+        <tr>
+          <td><code>PORT</code></td>
+          <td><code>3001</code></td>
+          <td>Internal backend API port.</td>
+        </tr>
+      </tbody>
+    </table>
+
+    <div style="margin-top: 4rem;">
+      <div class="section-label">Access Control</div>
+      <h2 class="section-title" style="font-size: 1.75rem;">User roles</h2>
+      <table class="roles-table" style="margin-top: 1.5rem;">
+        <thead>
+          <tr>
+            <th>Permission</th>
+            <th>Admin</th>
+            <th>Viewer</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr><td>View keys &amp; metrics</td><td>✅</td><td>✅</td></tr>
+          <tr><td>Execute Redis commands</td><td>✅</td><td>✅</td></tr>
+          <tr><td>Create / edit / delete keys</td><td>✅</td><td>❌</td></tr>
+          <tr><td>Manage connections</td><td>✅</td><td>❌</td></tr>
+          <tr><td>Manage users</td><td>✅</td><td>❌</td></tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+</section>
+
+<!-- FOOTER -->
+<footer>
+  <div class="footer-links">
+    <a href="https://hub.docker.com/r/nexaleaf/redisatlas" target="_blank">Docker Hub</a>
+    <a href="https://github.com/nexaleaf/redisatlas" target="_blank">GitHub</a>
+    <a href="#install">Quick Start</a>
+    <a href="#config">Docs</a>
+  </div>
+  <p>MIT License · Built by <a href="https://github.com/nexaleaf" target="_blank">NexaLeaf</a></p>
+</footer>
+
+<script>
+  function switchTab(name) {
+    document.querySelectorAll('.tab').forEach(t => t.classList.remove('active'));
+    document.querySelectorAll('.tab-content').forEach(t => t.classList.remove('active'));
+    document.getElementById('tab-' + name).classList.add('active');
+    event.target.classList.add('active');
+  }
+
+  function copyHero() {
+    const text = `docker run -d \\\n  -p 8080:80 \\\n  -e JWT_SECRET=change-me \\\n  -e ADMIN_PASSWORD=change-me \\\n  -v redisatlas_data:/app/backend/data \\\n  nexaleaf/redisatlas:latest`;
+    navigator.clipboard.writeText(text).then(() => {
+      const btn = event.target;
+      btn.textContent = 'Copied!';
+      setTimeout(() => btn.textContent = 'Copy', 2000);
+    });
+  }
+
+  function copyTab(tab) {
+    const commands = {
+      http: `docker run -d \\\n  --name redisatlas \\\n  -p 8080:80 \\\n  -e JWT_SECRET=your-secret \\\n  -e ADMIN_PASSWORD=your-password \\\n  -v redisatlas_data:/app/backend/data \\\n  --restart unless-stopped \\\n  nexaleaf/redisatlas:latest`,
+      https: `mkdir -p certs\nmkcert -cert-file certs/localhost.pem -key-file certs/localhost-key.pem localhost 127.0.0.1\ndocker run -d \\\n  --name redisatlas \\\n  -p 8080:80 -p 8443:443 \\\n  -e JWT_SECRET=your-secret \\\n  -e ADMIN_PASSWORD=your-password \\\n  -v $(pwd)/certs:/etc/nginx/certs:ro \\\n  -v redisatlas_data:/app/backend/data \\\n  nexaleaf/redisatlas:latest`,
+      compose: `services:\n  redisatlas:\n    image: nexaleaf/redisatlas:latest\n    ports:\n      - '8080:80'\n    volumes:\n      - redisatlas_data:/app/backend/data\n    environment:\n      - JWT_SECRET=change-me\n      - ADMIN_PASSWORD=change-me\n    restart: unless-stopped\n\nvolumes:\n  redisatlas_data:`
+    };
+    navigator.clipboard.writeText(commands[tab]).then(() => {
+      const btn = event.target;
+      btn.textContent = 'Copied!';
+      setTimeout(() => btn.textContent = 'Copy', 2000);
+    });
+  }
+</script>
+</body>
+</html>
