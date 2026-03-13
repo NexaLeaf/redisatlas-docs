@@ -12,15 +12,6 @@
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;600&display=swap" rel="stylesheet" />
-  <!-- Google tag (gtag.js) -->
-<script async src="https://www.googletagmanager.com/gtag/js?id=G-QTKC633Z6X"></script>
-<script>
-  window.dataLayer = window.dataLayer || [];
-  function gtag(){dataLayer.push(arguments);}
-  gtag('js', new Date());
-
-  gtag('config', 'G-QTKC633Z6X');
-</script>
   <style>
     *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
 
@@ -158,6 +149,24 @@
     .feature-icon { font-size: 1.75rem; margin-bottom: 0.75rem; }
     .feature-card h3 { font-size: 1rem; font-weight: 700; margin-bottom: 0.4rem; }
     .feature-card p { color: var(--muted); font-size: 0.9rem; }
+
+    /* ── VIDEO ── */
+    .video-wrapper {
+      width: 100%; max-width: 900px;
+      background: var(--bg2); border: 1px solid var(--border);
+      border-radius: 14px; overflow: hidden; margin-top: 3rem;
+    }
+    .video-wrapper-bar {
+      background: var(--bg3); padding: 0.6rem 1rem;
+      display: flex; align-items: center; gap: 0.5rem;
+      border-bottom: 1px solid var(--border);
+    }
+    .video-wrapper-bar span {
+      width: 12px; height: 12px; border-radius: 50%; display: inline-block;
+    }
+    .video-wrapper video {
+      width: 100%; display: block;
+    }
 
     /* ── SCREENSHOTS ── */
     .screenshots-grid {
@@ -358,6 +367,7 @@
   <ul class="nav-links">
     <li><a href="#features">Features</a></li>
     <li><a href="#why">Why</a></li>
+    <li><a href="#demo">Demo</a></li>
     <li><a href="#screenshots">Screenshots</a></li>
     <li><a href="#install">Install</a></li>
     <li><a href="#architecture">Architecture</a></li>
@@ -371,8 +381,6 @@
   <div class="hero-badge">🚀 Open Source · Self-Hosted</div>
   <h1>The Redis UI you<br/><span>actually own</span></h1>
   <p>Production-grade Redis management — browse 100M+ keys, monitor metrics in real-time, manage teams. One Docker command. No SaaS. No data leaving your network.</p>
-    <a href="https://www.producthunt.com/products/redisatlas?embed=true&amp;utm_source=badge-featured&amp;utm_medium=badge&amp;utm_campaign=badge-redisatlas" target="_blank" rel="noopener noreferrer"><img alt="RedisAtlas - Explore, Monitor, and Master Redis from One Dashboard | Product Hunt" width="250" height="54" src="https://api.producthunt.com/widgets/embed-image/v1/featured.svg?post_id=1097402&amp;theme=light&amp;t=1773405109363"></a>
-
 
   <div class="badges">
     <img src="https://img.shields.io/docker/pulls/nexaleaf/redisatlas?color=0db7ed&logo=docker&logoColor=white&style=flat-square" alt="Docker Pulls" />
@@ -398,16 +406,17 @@
     <div>  <span class="val">nexaleaf/redisatlas:latest</span></div>
   </div>
 
-  <!-- HERO PREVIEW — replace src with docs/screenshots/hero.png -->
-  <div class="hero-preview">
-    <div class="hero-preview-bar">
+  <!-- HERO VIDEO PREVIEW -->
+  <div class="video-wrapper">
+    <div class="video-wrapper-bar">
       <span class="dot-red"></span>
       <span class="dot-yellow"></span>
       <span class="dot-green"></span>
     </div>
-    <div class="hero-preview-content">
+    <video autoplay muted loop playsinline poster="screenshots/dashboard.png">
+      <source src="screenshots/redis-atlas.mov" type="video/mp4" />
       <img src="screenshots/dashboard.png" alt="RedisAtlas Dashboard" />
-    </div>
+    </video>
   </div>
 </section>
 
@@ -422,7 +431,7 @@
     <div class="stat-label">Docker command</div>
   </div>
   <div class="stat-item">
-    <div class="stat-number">12</div>
+    <div class="stat-number">19</div>
     <div class="stat-label">Built-in features</div>
   </div>
   <div class="stat-item">
@@ -461,7 +470,7 @@
       <div class="feature-card">
         <div class="feature-icon">📈</div>
         <h3>Analytics</h3>
-        <p>Key type distribution, expiry analysis, and namespace breakdown visualized with interactive charts.</p>
+        <p>Hit rate, eviction trends, namespace breakdown, and 24-hour historical charts (1h / 6h / 24h) with interactive time-range selection.</p>
       </div>
       <div class="feature-card">
         <div class="feature-icon">🐢</div>
@@ -477,6 +486,31 @@
         <div class="feature-icon">📦</div>
         <h3>Size Analysis</h3>
         <p>Find your biggest keys and memory hogs. Understand what's consuming your Redis memory.</p>
+      </div>
+      <div class="feature-card">
+        <div class="feature-icon">🩺</div>
+        <h3>Diagnostics</h3>
+        <p>Full <code style="font-family:monospace;background:var(--bg3);padding:0.1rem 0.3rem;border-radius:3px;font-size:0.8rem;">INFO ALL</code> viewer across all sections with health indicators. Admin-only BGSAVE &amp; BGREWRITEAOF triggers.</p>
+      </div>
+      <div class="feature-card">
+        <div class="feature-icon">📥</div>
+        <h3>Key Import</h3>
+        <p>Import keys from JSON, CSV, or Redis command files with a 5-entry preview and overwrite control.</p>
+      </div>
+      <div class="feature-card">
+        <div class="feature-icon">✏️</div>
+        <h3>Rich Type Editors</h3>
+        <p>Inline add / edit / delete for individual Hash fields, List items, Set members, and ZSet scores — no full-key rewrites.</p>
+      </div>
+      <div class="feature-card">
+        <div class="feature-icon">🖥️</div>
+        <h3>Live Monitor</h3>
+        <p>Stream every Redis command in real time. Filter by command, pause/resume feed, track cmd/s. Color-coded by operation type.</p>
+      </div>
+      <div class="feature-card">
+        <div class="feature-icon">🔔</div>
+        <h3>Key Watch</h3>
+        <p>Watch key patterns for keyspace notification events — set, del, expired, hset, and more — streamed live via WebSocket.</p>
       </div>
       <div class="feature-card">
         <div class="feature-icon">🔗</div>
@@ -538,21 +572,35 @@
   </div>
 </section>
 
+<!-- DEMO VIDEO -->
+<section id="demo">
+  <div class="container">
+    <div class="section-label">Demo</div>
+    <h2 class="section-title">Watch it in action</h2>
+    <p class="section-sub">A full walkthrough of RedisAtlas — key exploration, analytics, live monitor, diagnostics, and more.</p>
+    <div class="video-wrapper" style="max-width: 100%; margin-top: 2rem;">
+      <div class="video-wrapper-bar">
+        <span class="dot-red"></span>
+        <span class="dot-yellow"></span>
+        <span class="dot-green"></span>
+        <span style="margin-left: 0.5rem; font-size: 0.75rem; color: var(--muted); font-family: 'JetBrains Mono', monospace;">redisatlas — demo</span>
+      </div>
+      <video controls muted loop playsinline poster="screenshots/dashboard.png" style="width:100%;display:block;">
+        <source src="screenshots/redis-atlas.mov" type="video/mp4" />
+        Your browser does not support the video tag.
+      </video>
+    </div>
+  </div>
+</section>
+
 <!-- SCREENSHOTS -->
 <section id="screenshots" style="background: var(--bg2); border-top: 1px solid var(--border);">
   <div class="container">
     <div class="section-label">Screenshots</div>
     <h2 class="section-title">See it in action</h2>
-    <p class="section-sub">Drop your screenshots into <code style="font-family:monospace;background:var(--bg3);padding:0.1rem 0.4rem;border-radius:4px;font-size:0.9rem;">docs/screenshots/</code> and uncomment the img tags below.</p>
+    <p class="section-sub">Real screenshots from a live Redis instance.</p>
 
     <div class="screenshots-grid">
-
-      <div class="screenshot-card">
-        <div class="screenshot-placeholder">
-          <img src="screenshots/login.png" alt="Login" />
-        </div>
-        <div class="caption">🔐 Login</div>
-      </div>
 
       <div class="screenshot-card">
         <div class="screenshot-placeholder">
@@ -563,37 +611,79 @@
 
       <div class="screenshot-card">
         <div class="screenshot-placeholder">
-          <img src="screenshots/key-explorer.png" alt="Key Explorer" />
+          <img src="screenshots/key-explorer.png" alt="Key Explorer — Hash" />
         </div>
-        <div class="caption">🔑 Key Explorer</div>
+        <div class="caption">🔑 Key Explorer — Hash Editor</div>
       </div>
 
       <div class="screenshot-card">
         <div class="screenshot-placeholder">
-          <img src="screenshots/console.png" alt="Redis Console" />
+          <img src="screenshots/key-explorer-json.png" alt="Key Explorer — JSON" />
         </div>
-        <div class="caption">💻 Redis Console</div>
+        <div class="caption">🔑 Key Explorer — JSON Value</div>
       </div>
 
       <div class="screenshot-card">
         <div class="screenshot-placeholder">
           <img src="screenshots/analytics.png" alt="Analytics" />
         </div>
-        <div class="caption">📈 Analytics</div>
+        <div class="caption">📈 Analytics &amp; Historical Charts</div>
+      </div>
+
+      <div class="screenshot-card">
+        <div class="screenshot-placeholder">
+          <img src="screenshots/diagnostics.png" alt="Diagnostics" />
+        </div>
+        <div class="caption">🩺 Diagnostics — INFO Sections</div>
+      </div>
+
+      <div class="screenshot-card">
+        <div class="screenshot-placeholder">
+          <img src="screenshots/slow-queries.png" alt="Slow Queries" />
+        </div>
+        <div class="caption">🐢 Slow Query Log</div>
+      </div>
+
+      <div class="screenshot-card">
+        <div class="screenshot-placeholder">
+          <img src="screenshots/monitor.png" alt="Live Monitor" />
+        </div>
+        <div class="caption">🖥️ Live MONITOR Feed</div>
       </div>
 
       <div class="screenshot-card">
         <div class="screenshot-placeholder">
           <img src="screenshots/pubsub.png" alt="Pub/Sub" />
         </div>
-        <div class="caption">📡 Pub/Sub</div>
+        <div class="caption">📡 Pub/Sub Monitor</div>
       </div>
 
       <div class="screenshot-card">
         <div class="screenshot-placeholder">
-          <img src="screenshots/users.png" alt="User Management" />
+          <img src="screenshots/size-analysis.png" alt="Size Analysis" />
         </div>
-        <div class="caption">👥 User Management</div>
+        <div class="caption">📦 Size Analysis</div>
+      </div>
+
+      <div class="screenshot-card">
+        <div class="screenshot-placeholder">
+          <img src="screenshots/large-keys.png" alt="Large Key Detector" />
+        </div>
+        <div class="caption">🔍 Large Key Detector</div>
+      </div>
+
+      <div class="screenshot-card">
+        <div class="screenshot-placeholder">
+          <img src="screenshots/ttl-inspector.png" alt="TTL Inspector" />
+        </div>
+        <div class="caption">⏱️ TTL Inspector</div>
+      </div>
+
+      <div class="screenshot-card">
+        <div class="screenshot-placeholder">
+          <img src="screenshots/login.png" alt="Login" />
+        </div>
+        <div class="caption">🔐 Login</div>
       </div>
 
     </div>
@@ -815,7 +905,10 @@
         <tbody>
           <tr><td>View keys &amp; metrics</td><td>✅</td><td>✅</td></tr>
           <tr><td>Execute Redis commands</td><td>✅</td><td>✅</td></tr>
+          <tr><td>Use Live Monitor &amp; Key Watch</td><td>✅</td><td>✅</td></tr>
           <tr><td>Create / edit / delete keys</td><td>✅</td><td>❌</td></tr>
+          <tr><td>Import keys</td><td>✅</td><td>❌</td></tr>
+          <tr><td>Trigger BGSAVE / BGREWRITEAOF</td><td>✅</td><td>❌</td></tr>
           <tr><td>Manage connections</td><td>✅</td><td>❌</td></tr>
           <tr><td>Manage users</td><td>✅</td><td>❌</td></tr>
         </tbody>
