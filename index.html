@@ -224,6 +224,60 @@
     .hero-preview-content .ph-label { opacity: 0.35; letter-spacing: 0.05em; }
     .hero-preview-content img { width: 100%; height: 100%; object-fit: cover; display: block; position: absolute; inset: 0; }
 
+    /* ── STATS BAR ── */
+    .stats-bar {
+      display: flex; flex-wrap: wrap; justify-content: center; gap: 0;
+      border-top: 1px solid var(--border); border-bottom: 1px solid var(--border);
+      background: var(--bg2);
+    }
+    .stat-item {
+      flex: 1; min-width: 160px; padding: 2rem 1rem;
+      text-align: center; border-right: 1px solid var(--border);
+    }
+    .stat-item:last-child { border-right: none; }
+    .stat-number { font-size: 2rem; font-weight: 800; color: var(--red); letter-spacing: -0.03em; }
+    .stat-label { font-size: 0.8rem; color: var(--muted); margin-top: 0.25rem; text-transform: uppercase; letter-spacing: 0.06em; }
+
+    /* ── PULL BANNER ── */
+    .pull-banner {
+      background: linear-gradient(135deg, rgba(229,62,62,0.08) 0%, rgba(66,153,225,0.08) 100%);
+      border: 1px solid var(--border); border-radius: 14px;
+      padding: 2rem 2.5rem; margin-top: 3rem;
+      display: flex; align-items: center; justify-content: space-between;
+      flex-wrap: wrap; gap: 1.5rem;
+    }
+    .pull-banner-text h3 { font-size: 1.1rem; font-weight: 700; margin-bottom: 0.3rem; }
+    .pull-banner-text p { color: var(--muted); font-size: 0.9rem; }
+    .pull-code {
+      background: var(--bg); border: 1px solid var(--border);
+      border-radius: 8px; padding: 0.75rem 1.25rem;
+      font-family: 'JetBrains Mono', monospace; font-size: 0.9rem;
+      display: flex; align-items: center; gap: 1rem; flex-wrap: wrap;
+    }
+    .pull-code .cmd { color: var(--green); }
+    .pull-code .val { color: #fbb6ce; }
+    .pull-copy {
+      background: var(--red); color: #fff; border: none;
+      padding: 0.35rem 0.9rem; border-radius: 6px;
+      font-size: 0.8rem; font-weight: 600; cursor: pointer;
+      font-family: 'Inter', sans-serif; transition: background 0.2s;
+      white-space: nowrap;
+    }
+    .pull-copy:hover { background: var(--red-d); }
+
+    /* ── WHY SECTION ── */
+    .why-grid {
+      display: grid; grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+      gap: 1.25rem; margin-top: 2.5rem;
+    }
+    .why-card {
+      background: var(--bg2); border: 1px solid var(--border);
+      border-radius: 12px; padding: 1.5rem;
+    }
+    .why-card .why-icon { font-size: 1.5rem; margin-bottom: 0.75rem; }
+    .why-card h3 { font-size: 0.95rem; font-weight: 700; margin-bottom: 0.4rem; }
+    .why-card p { color: var(--muted); font-size: 0.875rem; line-height: 1.6; }
+
     /* ── INSTALL TABS ── */
     .install-section { background: var(--bg2); border-top: 1px solid var(--border); border-bottom: 1px solid var(--border); }
     .tabs { display: flex; gap: 0; border-bottom: 1px solid var(--border); margin-bottom: 2rem; }
@@ -294,6 +348,7 @@
   <a class="nav-logo" href="#"><span>Redis</span>Atlas</a>
   <ul class="nav-links">
     <li><a href="#features">Features</a></li>
+    <li><a href="#why">Why</a></li>
     <li><a href="#screenshots">Screenshots</a></li>
     <li><a href="#install">Install</a></li>
     <li><a href="#architecture">Architecture</a></li>
@@ -344,6 +399,30 @@
     </div>
   </div>
 </section>
+
+<!-- STATS BAR -->
+<div class="stats-bar">
+  <div class="stat-item">
+    <div class="stat-number">100M+</div>
+    <div class="stat-label">Keys supported</div>
+  </div>
+  <div class="stat-item">
+    <div class="stat-number">1</div>
+    <div class="stat-label">Docker command</div>
+  </div>
+  <div class="stat-item">
+    <div class="stat-number">12</div>
+    <div class="stat-label">Built-in features</div>
+  </div>
+  <div class="stat-item">
+    <div class="stat-number">2</div>
+    <div class="stat-label">Platforms (amd64 · arm64)</div>
+  </div>
+  <div class="stat-item">
+    <div class="stat-number">0</div>
+    <div class="stat-label">SaaS fees</div>
+  </div>
+</div>
 
 <!-- FEATURES -->
 <section id="features">
@@ -417,6 +496,37 @@
   </div>
 </section>
 
+<!-- WHY SELF-HOSTED -->
+<section id="why">
+  <div class="container">
+    <div class="section-label">Why Self-Hosted</div>
+    <h2 class="section-title">Your Redis, your rules</h2>
+    <p class="section-sub">Redis connection strings contain passwords to your production data. Don't route them through someone else's server.</p>
+    <div class="why-grid">
+      <div class="why-card">
+        <div class="why-icon">🔐</div>
+        <h3>Credentials stay on your network</h3>
+        <p>No Redis passwords, connection strings, or data ever leave your infrastructure. Everything runs inside your own container.</p>
+      </div>
+      <div class="why-card">
+        <div class="why-icon">💸</div>
+        <h3>No per-seat pricing</h3>
+        <p>Unlimited users, unlimited connections, unlimited keys. Deploy once and share with your entire team at zero additional cost.</p>
+      </div>
+      <div class="why-card">
+        <div class="why-icon">⚡</div>
+        <h3>Fast by default</h3>
+        <p>Running on your own infra means queries go directly to Redis — no SaaS proxy latency, no rate limits, no cold starts.</p>
+      </div>
+      <div class="why-card">
+        <div class="why-icon">🛡️</div>
+        <h3>Put it behind your VPN</h3>
+        <p>Deploy inside your private network. Only your team can reach it — no public-facing dashboard, no attack surface.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
 <!-- SCREENSHOTS -->
 <section id="screenshots" style="background: var(--bg2); border-top: 1px solid var(--border);">
   <div class="container">
@@ -485,6 +595,23 @@
     <div class="section-label">Installation</div>
     <h2 class="section-title">Up and running in seconds</h2>
     <p class="section-sub">Choose your preferred deployment method.</p>
+
+    <div class="pull-banner">
+      <div class="pull-banner-text">
+        <h3>Pull the image</h3>
+        <p>Available for <strong>linux/amd64</strong> and <strong>linux/arm64</strong>. Works on Mac, Linux, Windows, Raspberry Pi, and AWS Graviton.</p>
+      </div>
+      <div style="display:flex; flex-direction:column; gap:0.75rem;">
+        <div class="pull-code">
+          <span><span class="cmd">docker pull</span> <span class="val">nexaleaf/redisatlas:latest</span></span>
+          <button class="pull-copy" onclick="copyPull(this, 'docker pull nexaleaf/redisatlas:latest')">Copy</button>
+        </div>
+        <div class="pull-code">
+          <span><span class="cmd">docker pull</span> <span class="val">nexaleaf/redisatlas:latest</span> <span style="color:var(--muted)">--platform linux/arm64</span></span>
+          <button class="pull-copy" onclick="copyPull(this, 'docker pull --platform linux/arm64 nexaleaf/redisatlas:latest')">Copy</button>
+        </div>
+      </div>
+    </div>
 
     <div style="margin-top: 2.5rem;">
       <div class="tabs">
@@ -698,6 +825,13 @@
 </footer>
 
 <script>
+  function copyPull(btn, text) {
+    navigator.clipboard.writeText(text).then(() => {
+      btn.textContent = 'Copied!';
+      setTimeout(() => btn.textContent = 'Copy', 2000);
+    });
+  }
+
   function switchTab(name) {
     document.querySelectorAll('.tab').forEach(t => t.classList.remove('active'));
     document.querySelectorAll('.tab-content').forEach(t => t.classList.remove('active'));
