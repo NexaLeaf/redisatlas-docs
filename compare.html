@@ -1,0 +1,722 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>RedisAtlas vs RedisInsight vs ARDM vs Redis Commander — Redis UI Comparison 2025</title>
+  <meta name="description" content="Detailed comparison of RedisAtlas vs RedisInsight, Another Redis Desktop Manager, Redis Commander, and Medis. Choose the best Redis UI for your team." />
+  <meta property="og:title" content="Redis UI Comparison 2025 — RedisAtlas vs RedisInsight vs ARDM" />
+  <meta property="og:description" content="Feature-by-feature comparison of the top Redis UI tools. Self-hosted, multi-user, real-time, and open source." />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;600&display=swap" rel="stylesheet" />
+  <script async src="https://www.googletagmanager.com/gtag/js?id=G-QTKC633Z6X"></script>
+  <script>
+    window.dataLayer = window.dataLayer || [];
+    function gtag(){dataLayer.push(arguments);}
+    gtag('js', new Date());
+    gtag('config', 'G-QTKC633Z6X');
+  </script>
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    :root {
+      --red: #e53e3e; --red-d: #c53030; --bg: #0a0a0f; --bg2: #111118;
+      --bg3: #1a1a24; --border: #2a2a3a; --text: #e2e8f0; --muted: #718096;
+      --green: #48bb78; --blue: #4299e1; --yellow: #f6e05e; --orange: #ed8936;
+    }
+    html { scroll-behavior: smooth; }
+    body { font-family: 'Inter', sans-serif; background: var(--bg); color: var(--text); line-height: 1.6; }
+
+    nav {
+      position: fixed; top: 0; left: 0; right: 0; z-index: 100;
+      display: flex; align-items: center; justify-content: space-between;
+      padding: 0 2rem; height: 60px;
+      background: rgba(10,10,15,0.9); backdrop-filter: blur(12px);
+      border-bottom: 1px solid var(--border);
+    }
+    .nav-logo { display: flex; align-items: center; gap: 10px; font-weight: 700; font-size: 1.1rem; text-decoration: none; color: var(--text); }
+    .nav-logo span { color: var(--red); }
+    .nav-links { display: flex; gap: 2rem; list-style: none; }
+    .nav-links a { color: var(--muted); text-decoration: none; font-size: 0.9rem; font-weight: 500; transition: color 0.2s; }
+    .nav-links a:hover { color: var(--text); }
+    .nav-cta { background: var(--red); color: #fff; padding: 0.4rem 1.1rem; border-radius: 6px; font-size: 0.85rem; font-weight: 600; text-decoration: none; transition: background 0.2s; }
+    .nav-cta:hover { background: var(--red-d); }
+
+    .hero {
+      padding: 8rem 2rem 4rem;
+      text-align: center;
+      background: radial-gradient(ellipse 80% 50% at 50% 0%, rgba(229,62,62,0.1) 0%, transparent 70%);
+    }
+    .hero-badge { display: inline-flex; align-items: center; gap: 6px; background: rgba(229,62,62,0.1); border: 1px solid rgba(229,62,62,0.3); color: #fc8181; padding: 0.3rem 0.9rem; border-radius: 999px; font-size: 0.8rem; font-weight: 600; letter-spacing: 0.05em; text-transform: uppercase; margin-bottom: 1.5rem; }
+    .hero h1 { font-size: clamp(2rem, 5vw, 3.5rem); font-weight: 800; letter-spacing: -0.03em; margin-bottom: 1rem; }
+    .hero h1 span { color: var(--red); }
+    .hero p { color: var(--muted); font-size: 1.1rem; max-width: 600px; margin: 0 auto 2.5rem; }
+
+    section { padding: 5rem 2rem; }
+    .container { max-width: 1200px; margin: 0 auto; }
+    .section-label { font-size: 0.75rem; font-weight: 700; letter-spacing: 0.1em; text-transform: uppercase; color: var(--red); margin-bottom: 0.75rem; }
+    .section-title { font-size: clamp(1.5rem, 3vw, 2.25rem); font-weight: 800; letter-spacing: -0.02em; margin-bottom: 1rem; }
+    .section-sub { color: var(--muted); font-size: 1rem; max-width: 560px; }
+
+    /* ── Comparison Table ── */
+    .compare-wrap { overflow-x: auto; margin-top: 3rem; border-radius: 14px; border: 1px solid var(--border); }
+    table.compare { width: 100%; border-collapse: collapse; font-size: 0.875rem; min-width: 780px; }
+    table.compare thead tr { background: var(--bg3); }
+    table.compare th { padding: 1rem 1.25rem; text-align: center; font-weight: 700; font-size: 0.8rem; letter-spacing: 0.04em; color: var(--muted); border-bottom: 1px solid var(--border); white-space: nowrap; }
+    table.compare th:first-child { text-align: left; width: 240px; }
+    table.compare th.highlight { color: var(--red); background: rgba(229,62,62,0.05); }
+    table.compare td { padding: 0.8rem 1.25rem; text-align: center; border-bottom: 1px solid rgba(42,42,58,0.5); vertical-align: middle; }
+    table.compare td:first-child { text-align: left; font-size: 0.85rem; color: var(--text); }
+    table.compare td.highlight { background: rgba(229,62,62,0.03); }
+    table.compare tr:last-child td { border-bottom: none; }
+    table.compare tr:hover td { background: rgba(255,255,255,0.02); }
+    table.compare tr:hover td.highlight { background: rgba(229,62,62,0.05); }
+    table.compare .group-row td { background: var(--bg3); color: var(--muted); font-size: 0.7rem; font-weight: 700; letter-spacing: 0.1em; text-transform: uppercase; padding: 0.5rem 1.25rem; border-bottom: 1px solid var(--border); }
+    .yes { color: var(--green); font-size: 1.1rem; }
+    .no { color: #4a5568; font-size: 1.1rem; }
+    .partial { color: var(--yellow); font-size: 0.8rem; font-weight: 600; }
+    .na { color: #4a5568; font-size: 0.75rem; }
+    .tool-name { font-weight: 700; font-size: 0.9rem; }
+    .tool-name.ours { color: var(--red); }
+
+    /* ── Cards ── */
+    .tool-cards { display: grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); gap: 1.25rem; margin-top: 3rem; }
+    .tool-card { background: var(--bg2); border: 1px solid var(--border); border-radius: 12px; padding: 1.5rem; transition: border-color 0.2s, transform 0.2s; }
+    .tool-card:hover { border-color: rgba(229,62,62,0.3); transform: translateY(-2px); }
+    .tool-card.winner { border-color: rgba(229,62,62,0.5); background: linear-gradient(135deg, rgba(229,62,62,0.06) 0%, var(--bg2) 100%); }
+    .tool-card .tc-badge { font-size: 0.7rem; font-weight: 700; letter-spacing: 0.06em; text-transform: uppercase; padding: 0.2rem 0.6rem; border-radius: 999px; margin-bottom: 0.75rem; display: inline-block; }
+    .badge-ours { background: rgba(229,62,62,0.15); color: #fc8181; }
+    .badge-official { background: rgba(66,153,225,0.15); color: #76e4f7; }
+    .badge-desktop { background: rgba(113,128,150,0.15); color: var(--muted); }
+    .badge-legacy { background: rgba(113,128,150,0.1); color: #4a5568; }
+    .tool-card h3 { font-size: 1rem; font-weight: 700; margin-bottom: 0.35rem; }
+    .tool-card .tc-sub { font-size: 0.8rem; color: var(--muted); margin-bottom: 1rem; }
+    .tool-card .tc-pros { list-style: none; }
+    .tool-card .tc-pros li { font-size: 0.82rem; color: var(--muted); padding: 0.2rem 0; display: flex; gap: 0.5rem; }
+    .tool-card .tc-pros li::before { content: ''; flex-shrink: 0; }
+    .pro::before { content: '✓'; color: var(--green) !important; }
+    .con::before { content: '✗'; color: #fc4444 !important; }
+    .tool-card .tc-price { margin-top: 1rem; padding-top: 1rem; border-top: 1px solid var(--border); font-size: 0.8rem; color: var(--muted); display: flex; justify-content: space-between; }
+    .price-tag { font-weight: 700; }
+    .price-free { color: var(--green); }
+    .price-paid { color: var(--yellow); }
+
+    /* ── Verdict ── */
+    .verdict-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 1.25rem; margin-top: 2.5rem; }
+    .verdict-card { background: var(--bg2); border: 1px solid var(--border); border-radius: 12px; padding: 1.5rem; }
+    .verdict-card .vc-label { font-size: 0.7rem; font-weight: 700; text-transform: uppercase; letter-spacing: 0.08em; margin-bottom: 0.5rem; }
+    .verdict-card h3 { font-size: 1rem; font-weight: 700; margin-bottom: 0.5rem; }
+    .verdict-card p { font-size: 0.85rem; color: var(--muted); }
+    .verdict-label-teams { color: var(--blue); }
+    .verdict-label-solo { color: var(--green); }
+    .verdict-label-legacy { color: var(--yellow); }
+    .verdict-label-desktop { color: var(--orange); }
+
+    /* ── CTA ── */
+    .cta-band { background: linear-gradient(135deg, rgba(229,62,62,0.1) 0%, rgba(66,153,225,0.08) 100%); border: 1px solid var(--border); border-radius: 16px; padding: 3rem 2rem; text-align: center; margin-top: 4rem; }
+    .cta-band h2 { font-size: clamp(1.5rem, 3vw, 2rem); font-weight: 800; margin-bottom: 0.75rem; }
+    .cta-band p { color: var(--muted); margin-bottom: 2rem; }
+    .cta-actions { display: flex; gap: 1rem; justify-content: center; flex-wrap: wrap; }
+    .btn-primary { background: var(--red); color: #fff; padding: 0.75rem 1.75rem; border-radius: 8px; font-weight: 600; font-size: 1rem; text-decoration: none; transition: background 0.2s; }
+    .btn-primary:hover { background: var(--red-d); }
+    .btn-outline { background: transparent; color: var(--text); border: 1px solid var(--border); padding: 0.75rem 1.75rem; border-radius: 8px; font-weight: 600; font-size: 1rem; text-decoration: none; transition: border-color 0.2s; }
+    .btn-outline:hover { border-color: var(--text); }
+
+    /* ── Footer ── */
+    footer { text-align: center; padding: 3rem 2rem; border-top: 1px solid var(--border); color: var(--muted); font-size: 0.875rem; }
+    footer a { color: var(--muted); text-decoration: none; }
+    footer a:hover { color: var(--text); }
+    .footer-links { display: flex; gap: 2rem; justify-content: center; margin-bottom: 1rem; flex-wrap: wrap; }
+
+    @media (max-width: 640px) { .nav-links { display: none; } }
+  </style>
+</head>
+<body>
+
+<nav>
+  <a class="nav-logo" href="index.html"><span>Redis</span>Atlas</a>
+  <ul class="nav-links">
+    <li><a href="index.html#features">Features</a></li>
+    <li><a href="index.html#install">Install</a></li>
+    <li><a href="compare.html" style="color:var(--text)">Compare</a></li>
+    <li><a href="index.html#roadmap">Roadmap</a></li>
+  </ul>
+  <a class="nav-cta" href="https://hub.docker.com/r/nexaleaf/redisatlas" target="_blank">Docker Hub</a>
+</nav>
+
+<!-- ── Hero ── -->
+<div class="hero">
+  <div class="hero-badge">⚖️ Honest Comparison · Updated 2025</div>
+  <h1>RedisAtlas vs<br/><span>Every Other Redis UI</span></h1>
+  <p>Feature-by-feature breakdown of every major Redis management tool. See exactly what you get — and what you don't.</p>
+</div>
+
+<!-- ── Tool Cards ── -->
+<section>
+  <div class="container">
+    <div class="section-label">The Contenders</div>
+    <h2 class="section-title">All the Redis UI tools, side by side</h2>
+    <p class="section-sub">We compared every major open-source and commercial Redis UI so you can make an informed decision.</p>
+
+    <div class="tool-cards">
+      <div class="tool-card winner">
+        <span class="tc-badge badge-ours">This Tool</span>
+        <h3>RedisAtlas</h3>
+        <div class="tc-sub">Self-hosted · Web · Docker · Open Source</div>
+        <ul class="tc-pros">
+          <li class="pro">Single Docker image, runs anywhere</li>
+          <li class="pro">Multi-user + RBAC (admin / viewer)</li>
+          <li class="pro">HTTPS built-in via mkcert</li>
+          <li class="pro">Real-time WebSocket streaming</li>
+          <li class="pro">Audit log + alert rules + webhooks</li>
+          <li class="pro">No account, no SaaS, no phone-home</li>
+        </ul>
+        <div class="tc-price">
+          <span>License: MIT</span>
+          <span class="price-tag price-free">Free</span>
+        </div>
+      </div>
+
+      <div class="tool-card">
+        <span class="tc-badge badge-official">Official</span>
+        <h3>RedisInsight</h3>
+        <div class="tc-sub">By Redis Ltd · Web + Desktop · Freemium</div>
+        <ul class="tc-pros">
+          <li class="pro">Official support from Redis Ltd</li>
+          <li class="pro">Streams, Pub/Sub, slow log</li>
+          <li class="pro">Cluster support</li>
+          <li class="con">Account required for full access</li>
+          <li class="con">No multi-user or RBAC</li>
+          <li class="con">No HTTPS, no audit log, no alerts</li>
+        </ul>
+        <div class="tc-price">
+          <span>License: SSPL</span>
+          <span class="price-tag price-free">Free</span>
+        </div>
+      </div>
+
+      <div class="tool-card">
+        <span class="tc-badge badge-desktop">Desktop App</span>
+        <h3>ARDM</h3>
+        <div class="tc-sub">Another Redis Desktop Manager · macOS/Win/Linux</div>
+        <ul class="tc-pros">
+          <li class="pro">Polished desktop UI</li>
+          <li class="pro">SSH tunnel support</li>
+          <li class="pro">100M+ keys handling</li>
+          <li class="con">Desktop only — no web access</li>
+          <li class="con">No real-time monitoring</li>
+          <li class="con">No multi-user, no HTTPS</li>
+        </ul>
+        <div class="tc-price">
+          <span>License: Proprietary</span>
+          <span class="price-tag price-paid">$9.99</span>
+        </div>
+      </div>
+
+      <div class="tool-card">
+        <span class="tc-badge badge-legacy">Legacy</span>
+        <h3>Redis Commander</h3>
+        <div class="tc-sub">Node.js · Web · Open Source</div>
+        <ul class="tc-pros">
+          <li class="pro">Simple, lightweight</li>
+          <li class="pro">Easy to self-host</li>
+          <li class="con">No auth by default</li>
+          <li class="con">No real-time, no analytics</li>
+          <li class="con">No HTTPS, no multi-user</li>
+          <li class="con">Mostly unmaintained</li>
+        </ul>
+        <div class="tc-price">
+          <span>License: MIT</span>
+          <span class="price-tag price-free">Free</span>
+        </div>
+      </div>
+
+      <div class="tool-card">
+        <span class="tc-badge badge-desktop">Desktop App</span>
+        <h3>Medis</h3>
+        <div class="tc-sub">macOS only · Native App</div>
+        <ul class="tc-pros">
+          <li class="pro">Beautiful native macOS UI</li>
+          <li class="pro">Fast key browsing</li>
+          <li class="con">macOS only — no Linux/Windows</li>
+          <li class="con">No monitoring or analytics</li>
+          <li class="con">No multi-user or HTTPS</li>
+        </ul>
+        <div class="tc-price">
+          <span>License: MIT</span>
+          <span class="price-tag price-paid">$3.99</span>
+        </div>
+      </div>
+
+      <div class="tool-card">
+        <span class="tc-badge badge-legacy">SaaS</span>
+        <h3>Redsmin</h3>
+        <div class="tc-sub">Cloud SaaS · No self-host option</div>
+        <ul class="tc-pros">
+          <li class="pro">No setup needed</li>
+          <li class="pro">Nice analytics UI</li>
+          <li class="con">Data routed through their cloud</li>
+          <li class="con">Monthly subscription fee</li>
+          <li class="con">Not self-hostable</li>
+        </ul>
+        <div class="tc-price">
+          <span>License: Proprietary</span>
+          <span class="price-tag price-paid">$9+/mo</span>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ── Full Feature Matrix ── -->
+<section style="background: var(--bg2); border-top: 1px solid var(--border);">
+  <div class="container">
+    <div class="section-label">Full Feature Matrix</div>
+    <h2 class="section-title">Every feature, every tool</h2>
+    <p class="section-sub">✅ = Full support &nbsp; ⚠️ = Partial / limited &nbsp; ❌ = Not available</p>
+
+    <div class="compare-wrap">
+      <table class="compare">
+        <thead>
+          <tr>
+            <th>Feature</th>
+            <th class="highlight"><span class="tool-name ours">RedisAtlas</span></th>
+            <th><span class="tool-name">RedisInsight</span></th>
+            <th><span class="tool-name">ARDM</span></th>
+            <th><span class="tool-name">Redis Commander</span></th>
+            <th><span class="tool-name">Medis</span></th>
+            <th><span class="tool-name">Redsmin</span></th>
+          </tr>
+        </thead>
+        <tbody>
+          <!-- Deployment -->
+          <tr class="group-row"><td colspan="7">🚀 Deployment &amp; Access</td></tr>
+          <tr>
+            <td>Web-based (browser)</td>
+            <td class="highlight"><span class="yes">✅</span></td>
+            <td><span class="yes">✅</span></td>
+            <td><span class="no">❌</span></td>
+            <td><span class="yes">✅</span></td>
+            <td><span class="no">❌</span></td>
+            <td><span class="yes">✅</span></td>
+          </tr>
+          <tr>
+            <td>Single Docker image</td>
+            <td class="highlight"><span class="yes">✅</span></td>
+            <td><span class="no">❌</span></td>
+            <td><span class="no">❌</span></td>
+            <td><span class="partial">⚠️ manual</span></td>
+            <td><span class="no">❌</span></td>
+            <td><span class="no">❌</span></td>
+          </tr>
+          <tr>
+            <td>Self-hosted</td>
+            <td class="highlight"><span class="yes">✅</span></td>
+            <td><span class="yes">✅</span></td>
+            <td><span class="yes">✅</span></td>
+            <td><span class="yes">✅</span></td>
+            <td><span class="yes">✅</span></td>
+            <td><span class="no">❌</span></td>
+          </tr>
+          <tr>
+            <td>HTTPS built-in</td>
+            <td class="highlight"><span class="yes">✅</span></td>
+            <td><span class="no">❌</span></td>
+            <td><span class="no">❌</span></td>
+            <td><span class="no">❌</span></td>
+            <td><span class="no">❌</span></td>
+            <td><span class="yes">✅</span></td>
+          </tr>
+          <tr>
+            <td>No account required</td>
+            <td class="highlight"><span class="yes">✅</span></td>
+            <td><span class="no">❌</span></td>
+            <td><span class="yes">✅</span></td>
+            <td><span class="yes">✅</span></td>
+            <td><span class="yes">✅</span></td>
+            <td><span class="no">❌</span></td>
+          </tr>
+          <tr>
+            <td>Linux / Windows / macOS</td>
+            <td class="highlight"><span class="yes">✅</span></td>
+            <td><span class="yes">✅</span></td>
+            <td><span class="yes">✅</span></td>
+            <td><span class="yes">✅</span></td>
+            <td><span class="partial">⚠️ macOS only</span></td>
+            <td><span class="yes">✅</span></td>
+          </tr>
+          <tr>
+            <td>amd64 + arm64</td>
+            <td class="highlight"><span class="yes">✅</span></td>
+            <td><span class="partial">⚠️</span></td>
+            <td><span class="yes">✅</span></td>
+            <td><span class="partial">⚠️</span></td>
+            <td><span class="no">❌</span></td>
+            <td><span class="na">N/A</span></td>
+          </tr>
+
+          <!-- Security & Team -->
+          <tr class="group-row"><td colspan="7">🔒 Security &amp; Team Features</td></tr>
+          <tr>
+            <td>Multi-user support</td>
+            <td class="highlight"><span class="yes">✅</span></td>
+            <td><span class="no">❌</span></td>
+            <td><span class="no">❌</span></td>
+            <td><span class="no">❌</span></td>
+            <td><span class="no">❌</span></td>
+            <td><span class="partial">⚠️ paid</span></td>
+          </tr>
+          <tr>
+            <td>Role-based access (RBAC)</td>
+            <td class="highlight"><span class="yes">✅</span></td>
+            <td><span class="no">❌</span></td>
+            <td><span class="no">❌</span></td>
+            <td><span class="no">❌</span></td>
+            <td><span class="no">❌</span></td>
+            <td><span class="no">❌</span></td>
+          </tr>
+          <tr>
+            <td>Audit log</td>
+            <td class="highlight"><span class="yes">✅</span></td>
+            <td><span class="no">❌</span></td>
+            <td><span class="no">❌</span></td>
+            <td><span class="no">❌</span></td>
+            <td><span class="no">❌</span></td>
+            <td><span class="no">❌</span></td>
+          </tr>
+          <tr>
+            <td>JWT authentication</td>
+            <td class="highlight"><span class="yes">✅</span></td>
+            <td><span class="partial">⚠️</span></td>
+            <td><span class="no">❌</span></td>
+            <td><span class="partial">⚠️ basic</span></td>
+            <td><span class="no">❌</span></td>
+            <td><span class="yes">✅</span></td>
+          </tr>
+
+          <!-- Key Management -->
+          <tr class="group-row"><td colspan="7">🔑 Key Management</td></tr>
+          <tr>
+            <td>Browse / search keys</td>
+            <td class="highlight"><span class="yes">✅</span></td>
+            <td><span class="yes">✅</span></td>
+            <td><span class="yes">✅</span></td>
+            <td><span class="yes">✅</span></td>
+            <td><span class="yes">✅</span></td>
+            <td><span class="yes">✅</span></td>
+          </tr>
+          <tr>
+            <td>100M+ keys (virtual scroll)</td>
+            <td class="highlight"><span class="yes">✅</span></td>
+            <td><span class="partial">⚠️</span></td>
+            <td><span class="yes">✅</span></td>
+            <td><span class="no">❌</span></td>
+            <td><span class="partial">⚠️</span></td>
+            <td><span class="partial">⚠️</span></td>
+          </tr>
+          <tr>
+            <td>Bulk delete / TTL operations</td>
+            <td class="highlight"><span class="yes">✅</span></td>
+            <td><span class="yes">✅</span></td>
+            <td><span class="partial">⚠️</span></td>
+            <td><span class="no">❌</span></td>
+            <td><span class="no">❌</span></td>
+            <td><span class="partial">⚠️</span></td>
+          </tr>
+          <tr>
+            <td>Inline field editing (Hash/List/Set/ZSet)</td>
+            <td class="highlight"><span class="yes">✅</span></td>
+            <td><span class="yes">✅</span></td>
+            <td><span class="yes">✅</span></td>
+            <td><span class="partial">⚠️</span></td>
+            <td><span class="yes">✅</span></td>
+            <td><span class="partial">⚠️</span></td>
+          </tr>
+          <tr>
+            <td>Key import (JSON / CSV / Redis)</td>
+            <td class="highlight"><span class="yes">✅</span></td>
+            <td><span class="partial">⚠️</span></td>
+            <td><span class="no">❌</span></td>
+            <td><span class="no">❌</span></td>
+            <td><span class="no">❌</span></td>
+            <td><span class="no">❌</span></td>
+          </tr>
+          <tr>
+            <td>Key export</td>
+            <td class="highlight"><span class="yes">✅</span></td>
+            <td><span class="partial">⚠️</span></td>
+            <td><span class="yes">✅</span></td>
+            <td><span class="no">❌</span></td>
+            <td><span class="no">❌</span></td>
+            <td><span class="no">❌</span></td>
+          </tr>
+          <tr>
+            <td>Key pattern tree view</td>
+            <td class="highlight"><span class="yes">✅</span></td>
+            <td><span class="partial">⚠️</span></td>
+            <td><span class="yes">✅</span></td>
+            <td><span class="no">❌</span></td>
+            <td><span class="yes">✅</span></td>
+            <td><span class="partial">⚠️</span></td>
+          </tr>
+          <tr>
+            <td>TTL inspector + histogram</td>
+            <td class="highlight"><span class="yes">✅</span></td>
+            <td><span class="partial">⚠️</span></td>
+            <td><span class="no">❌</span></td>
+            <td><span class="no">❌</span></td>
+            <td><span class="no">❌</span></td>
+            <td><span class="no">❌</span></td>
+          </tr>
+
+          <!-- Monitoring -->
+          <tr class="group-row"><td colspan="7">📊 Monitoring &amp; Analytics</td></tr>
+          <tr>
+            <td>Real-time metrics dashboard</td>
+            <td class="highlight"><span class="yes">✅</span></td>
+            <td><span class="yes">✅</span></td>
+            <td><span class="partial">⚠️</span></td>
+            <td><span class="no">❌</span></td>
+            <td><span class="no">❌</span></td>
+            <td><span class="yes">✅</span></td>
+          </tr>
+          <tr>
+            <td>WebSocket streaming (live push)</td>
+            <td class="highlight"><span class="yes">✅</span></td>
+            <td><span class="no">❌</span></td>
+            <td><span class="no">❌</span></td>
+            <td><span class="no">❌</span></td>
+            <td><span class="no">❌</span></td>
+            <td><span class="no">❌</span></td>
+          </tr>
+          <tr>
+            <td>24h historical charts</td>
+            <td class="highlight"><span class="yes">✅</span></td>
+            <td><span class="partial">⚠️</span></td>
+            <td><span class="no">❌</span></td>
+            <td><span class="no">❌</span></td>
+            <td><span class="no">❌</span></td>
+            <td><span class="yes">✅</span></td>
+          </tr>
+          <tr>
+            <td>Slow log viewer</td>
+            <td class="highlight"><span class="yes">✅</span></td>
+            <td><span class="yes">✅</span></td>
+            <td><span class="no">❌</span></td>
+            <td><span class="no">❌</span></td>
+            <td><span class="no">❌</span></td>
+            <td><span class="yes">✅</span></td>
+          </tr>
+          <tr>
+            <td>Live command monitor (MONITOR)</td>
+            <td class="highlight"><span class="yes">✅</span></td>
+            <td><span class="yes">✅</span></td>
+            <td><span class="no">❌</span></td>
+            <td><span class="no">❌</span></td>
+            <td><span class="no">❌</span></td>
+            <td><span class="partial">⚠️</span></td>
+          </tr>
+          <tr>
+            <td>Key watch (keyspace notifications)</td>
+            <td class="highlight"><span class="yes">✅</span></td>
+            <td><span class="no">❌</span></td>
+            <td><span class="no">❌</span></td>
+            <td><span class="no">❌</span></td>
+            <td><span class="no">❌</span></td>
+            <td><span class="no">❌</span></td>
+          </tr>
+          <tr>
+            <td>Alert rules + webhook delivery</td>
+            <td class="highlight"><span class="yes">✅</span></td>
+            <td><span class="no">❌</span></td>
+            <td><span class="no">❌</span></td>
+            <td><span class="no">❌</span></td>
+            <td><span class="no">❌</span></td>
+            <td><span class="partial">⚠️ paid</span></td>
+          </tr>
+          <tr>
+            <td>Size analysis (top memory keys)</td>
+            <td class="highlight"><span class="yes">✅</span></td>
+            <td><span class="yes">✅</span></td>
+            <td><span class="no">❌</span></td>
+            <td><span class="no">❌</span></td>
+            <td><span class="no">❌</span></td>
+            <td><span class="partial">⚠️</span></td>
+          </tr>
+          <tr>
+            <td>Command stats breakdown</td>
+            <td class="highlight"><span class="yes">✅</span></td>
+            <td><span class="no">❌</span></td>
+            <td><span class="no">❌</span></td>
+            <td><span class="no">❌</span></td>
+            <td><span class="no">❌</span></td>
+            <td><span class="partial">⚠️</span></td>
+          </tr>
+          <tr>
+            <td>Replication / persistence health</td>
+            <td class="highlight"><span class="yes">✅</span></td>
+            <td><span class="partial">⚠️</span></td>
+            <td><span class="no">❌</span></td>
+            <td><span class="no">❌</span></td>
+            <td><span class="no">❌</span></td>
+            <td><span class="partial">⚠️</span></td>
+          </tr>
+
+          <!-- Advanced -->
+          <tr class="group-row"><td colspan="7">⚡ Advanced Features</td></tr>
+          <tr>
+            <td>Redis Streams Explorer</td>
+            <td class="highlight"><span class="yes">✅</span></td>
+            <td><span class="yes">✅</span></td>
+            <td><span class="no">❌</span></td>
+            <td><span class="no">❌</span></td>
+            <td><span class="no">❌</span></td>
+            <td><span class="no">❌</span></td>
+          </tr>
+          <tr>
+            <td>Pub/Sub live messaging</td>
+            <td class="highlight"><span class="yes">✅</span></td>
+            <td><span class="yes">✅</span></td>
+            <td><span class="no">❌</span></td>
+            <td><span class="no">❌</span></td>
+            <td><span class="no">❌</span></td>
+            <td><span class="no">❌</span></td>
+          </tr>
+          <tr>
+            <td>Cluster topology view</td>
+            <td class="highlight"><span class="yes">✅</span></td>
+            <td><span class="yes">✅</span></td>
+            <td><span class="yes">✅</span></td>
+            <td><span class="no">❌</span></td>
+            <td><span class="no">❌</span></td>
+            <td><span class="partial">⚠️</span></td>
+          </tr>
+          <tr>
+            <td>Multi-connection management</td>
+            <td class="highlight"><span class="yes">✅</span></td>
+            <td><span class="yes">✅</span></td>
+            <td><span class="yes">✅</span></td>
+            <td><span class="yes">✅</span></td>
+            <td><span class="yes">✅</span></td>
+            <td><span class="yes">✅</span></td>
+          </tr>
+          <tr>
+            <td>Full INFO ALL diagnostics</td>
+            <td class="highlight"><span class="yes">✅</span></td>
+            <td><span class="partial">⚠️</span></td>
+            <td><span class="no">❌</span></td>
+            <td><span class="no">❌</span></td>
+            <td><span class="no">❌</span></td>
+            <td><span class="no">❌</span></td>
+          </tr>
+          <tr>
+            <td>PostgreSQL data persistence</td>
+            <td class="highlight"><span class="yes">✅</span></td>
+            <td><span class="na">N/A</span></td>
+            <td><span class="na">N/A</span></td>
+            <td><span class="na">N/A</span></td>
+            <td><span class="na">N/A</span></td>
+            <td><span class="na">N/A</span></td>
+          </tr>
+          <tr>
+            <td>Redis cache layer for UI</td>
+            <td class="highlight"><span class="yes">✅</span></td>
+            <td><span class="no">❌</span></td>
+            <td><span class="no">❌</span></td>
+            <td><span class="no">❌</span></td>
+            <td><span class="no">❌</span></td>
+            <td><span class="no">❌</span></td>
+          </tr>
+
+          <!-- Pricing -->
+          <tr class="group-row"><td colspan="7">💰 Pricing &amp; License</td></tr>
+          <tr>
+            <td>Price</td>
+            <td class="highlight" style="color: var(--green); font-weight: 700;">Free</td>
+            <td style="color: var(--green); font-weight: 600;">Free</td>
+            <td style="color: var(--yellow); font-weight: 600;">$9.99 one-time</td>
+            <td style="color: var(--green); font-weight: 600;">Free</td>
+            <td style="color: var(--yellow); font-weight: 600;">$3.99 one-time</td>
+            <td style="color: var(--orange); font-weight: 600;">$9+/month</td>
+          </tr>
+          <tr>
+            <td>Open source</td>
+            <td class="highlight"><span class="yes">✅ MIT</span></td>
+            <td><span class="partial">⚠️ SSPL</span></td>
+            <td><span class="no">❌</span></td>
+            <td><span class="yes">✅ MIT</span></td>
+            <td><span class="partial">⚠️ MIT (old)</span></td>
+            <td><span class="no">❌</span></td>
+          </tr>
+          <tr>
+            <td>Data stays in your network</td>
+            <td class="highlight"><span class="yes">✅</span></td>
+            <td><span class="yes">✅</span></td>
+            <td><span class="yes">✅</span></td>
+            <td><span class="yes">✅</span></td>
+            <td><span class="yes">✅</span></td>
+            <td><span class="no">❌</span></td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+</section>
+
+<!-- ── Verdict ── -->
+<section>
+  <div class="container">
+    <div class="section-label">Verdict</div>
+    <h2 class="section-title">The right tool for the right job</h2>
+    <p class="section-sub">Every tool has its place. Here's our honest take on when to use each one.</p>
+
+    <div class="verdict-grid">
+      <div class="verdict-card">
+        <div class="vc-label verdict-label-teams">Best for Teams</div>
+        <h3>RedisAtlas</h3>
+        <p>If you run Redis in production and need multi-user access, audit trails, real-time monitoring, and HTTPS — RedisAtlas is the only self-hosted tool that covers all of it in a single Docker image.</p>
+      </div>
+      <div class="verdict-card">
+        <div class="vc-label verdict-label-solo">Best Official Tool</div>
+        <h3>RedisInsight</h3>
+        <p>Best choice if you need official Redis support, use Redis Stack features (RediSearch, RedisJSON), or prefer a tool backed directly by Redis Ltd. Limited to single-user setups.</p>
+      </div>
+      <div class="verdict-card">
+        <div class="vc-label verdict-label-desktop">Best Desktop App</div>
+        <h3>ARDM</h3>
+        <p>The most polished desktop experience for solo developers. SSH tunnel support and a clean UI make it great for local exploration. Not suitable for shared team access or web deployment.</p>
+      </div>
+      <div class="verdict-card">
+        <div class="vc-label verdict-label-legacy">Quick &amp; Disposable</div>
+        <h3>Redis Commander</h3>
+        <p>Fine for a local dev environment where you just need to peek at keys. Don't run it in production — no authentication by default and essentially unmaintained.</p>
+      </div>
+    </div>
+
+    <!-- CTA -->
+    <div class="cta-band">
+      <h2>Ready to switch to RedisAtlas?</h2>
+      <p>One Docker command. Multi-user. HTTPS. Real-time. Free forever.</p>
+      <div class="cta-actions">
+        <a class="btn-primary" href="index.html#install">Get Started Free</a>
+        <a class="btn-outline" href="https://hub.docker.com/r/nexaleaf/redisatlas" target="_blank">Docker Hub</a>
+        <a class="btn-outline" href="https://github.com/nexaleaf/redisatlas" target="_blank">View on GitHub</a>
+      </div>
+    </div>
+  </div>
+</section>
+
+<footer>
+  <div class="footer-links">
+    <a href="index.html">Home</a>
+    <a href="index.html#features">Features</a>
+    <a href="compare.html">Compare</a>
+    <a href="index.html#install">Install</a>
+    <a href="https://hub.docker.com/r/nexaleaf/redisatlas" target="_blank">Docker Hub</a>
+    <a href="https://github.com/nexaleaf/redisatlas" target="_blank">GitHub</a>
+  </div>
+  <p>MIT License · Built by <a href="https://github.com/nexaleaf" target="_blank">NexaLeaf</a></p>
+</footer>
+
+</body>
+</html>
