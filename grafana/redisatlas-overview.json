@@ -1,0 +1,220 @@
+{
+  "__inputs": [
+    {
+      "name": "DS_REDIS_PROMETHEUS",
+      "label": "RedisAtlas Prometheus",
+      "description": "Prometheus datasource scraping the RedisAtlas /metrics endpoint",
+      "type": "datasource",
+      "pluginId": "prometheus",
+      "pluginName": "Prometheus"
+    }
+  ],
+  "__requires": [
+    { "type": "grafana", "id": "grafana", "name": "Grafana", "version": "10.0.0" },
+    { "type": "datasource", "id": "prometheus", "name": "Prometheus", "version": "1.0.0" },
+    { "type": "panel", "id": "timeseries", "name": "Time series", "version": "" },
+    { "type": "panel", "id": "gauge", "name": "Gauge", "version": "" },
+    { "type": "panel", "id": "stat", "name": "Stat", "version": "" },
+    { "type": "panel", "id": "table", "name": "Table", "version": "" }
+  ],
+  "title": "RedisAtlas — Redis Overview",
+  "uid": "redisatlas-overview",
+  "description": "Pre-built Redis dashboard powered by RedisAtlas Prometheus metrics endpoint.",
+  "tags": ["redis", "redisatlas"],
+  "schemaVersion": 38,
+  "version": 1,
+  "refresh": "10s",
+  "time": { "from": "now-1h", "to": "now" },
+  "templating": {
+    "list": [
+      {
+        "name": "connection",
+        "label": "Connection",
+        "type": "query",
+        "datasource": { "type": "prometheus", "uid": "${DS_REDIS_PROMETHEUS}" },
+        "query": "label_values(redis_ops_per_sec, connection)",
+        "refresh": 2,
+        "includeAll": false,
+        "multi": false,
+        "current": {}
+      }
+    ]
+  },
+  "panels": [
+    {
+      "id": 1,
+      "title": "Ops / sec",
+      "type": "stat",
+      "gridPos": { "h": 4, "w": 4, "x": 0, "y": 0 },
+      "datasource": { "type": "prometheus", "uid": "${DS_REDIS_PROMETHEUS}" },
+      "targets": [
+        {
+          "expr": "redis_ops_per_sec{connection=~\"$connection\"}",
+          "legendFormat": "ops/sec",
+          "refId": "A"
+        }
+      ],
+      "options": { "reduceOptions": { "calcs": ["lastNotNull"] }, "colorMode": "value", "graphMode": "area", "textMode": "auto" },
+      "fieldConfig": { "defaults": { "color": { "mode": "thresholds" }, "thresholds": { "steps": [{ "color": "green", "value": null }, { "color": "yellow", "value": 10000 }, { "color": "red", "value": 50000 }] }, "unit": "ops" } }
+    },
+    {
+      "id": 2,
+      "title": "Memory Used",
+      "type": "stat",
+      "gridPos": { "h": 4, "w": 4, "x": 4, "y": 0 },
+      "datasource": { "type": "prometheus", "uid": "${DS_REDIS_PROMETHEUS}" },
+      "targets": [
+        {
+          "expr": "redis_memory_used_bytes{connection=~\"$connection\"}",
+          "legendFormat": "Used",
+          "refId": "A"
+        }
+      ],
+      "options": { "reduceOptions": { "calcs": ["lastNotNull"] }, "colorMode": "value", "graphMode": "area" },
+      "fieldConfig": { "defaults": { "unit": "bytes", "color": { "mode": "thresholds" }, "thresholds": { "steps": [{ "color": "green", "value": null }, { "color": "yellow", "value": 1073741824 }, { "color": "red", "value": 4294967296 }] } } }
+    },
+    {
+      "id": 3,
+      "title": "Memory Used %",
+      "type": "gauge",
+      "gridPos": { "h": 4, "w": 4, "x": 8, "y": 0 },
+      "datasource": { "type": "prometheus", "uid": "${DS_REDIS_PROMETHEUS}" },
+      "targets": [
+        {
+          "expr": "redis_memory_used_percent{connection=~\"$connection\"}",
+          "legendFormat": "Used %",
+          "refId": "A"
+        }
+      ],
+      "options": { "reduceOptions": { "calcs": ["lastNotNull"] }, "orientation": "auto", "showThresholdMarkers": true },
+      "fieldConfig": { "defaults": { "unit": "percent", "min": 0, "max": 100, "color": { "mode": "thresholds" }, "thresholds": { "steps": [{ "color": "green", "value": null }, { "color": "yellow", "value": 70 }, { "color": "red", "value": 90 }] } } }
+    },
+    {
+      "id": 4,
+      "title": "Cache Hit Rate",
+      "type": "gauge",
+      "gridPos": { "h": 4, "w": 4, "x": 12, "y": 0 },
+      "datasource": { "type": "prometheus", "uid": "${DS_REDIS_PROMETHEUS}" },
+      "targets": [
+        {
+          "expr": "redis_keyspace_hit_rate{connection=~\"$connection\"}",
+          "legendFormat": "Hit Rate",
+          "refId": "A"
+        }
+      ],
+      "options": { "reduceOptions": { "calcs": ["lastNotNull"] }, "orientation": "auto", "showThresholdMarkers": true },
+      "fieldConfig": { "defaults": { "unit": "percent", "min": 0, "max": 100, "color": { "mode": "thresholds" }, "thresholds": { "steps": [{ "color": "red", "value": null }, { "color": "yellow", "value": 80 }, { "color": "green", "value": 95 }] } } }
+    },
+    {
+      "id": 5,
+      "title": "Connected Clients",
+      "type": "stat",
+      "gridPos": { "h": 4, "w": 4, "x": 16, "y": 0 },
+      "datasource": { "type": "prometheus", "uid": "${DS_REDIS_PROMETHEUS}" },
+      "targets": [
+        {
+          "expr": "redis_connected_clients{connection=~\"$connection\"}",
+          "legendFormat": "Clients",
+          "refId": "A"
+        }
+      ],
+      "options": { "reduceOptions": { "calcs": ["lastNotNull"] }, "colorMode": "value", "graphMode": "area" },
+      "fieldConfig": { "defaults": { "unit": "none", "color": { "mode": "thresholds" }, "thresholds": { "steps": [{ "color": "green", "value": null }, { "color": "yellow", "value": 500 }, { "color": "red", "value": 5000 }] } } }
+    },
+    {
+      "id": 6,
+      "title": "Total Keys",
+      "type": "stat",
+      "gridPos": { "h": 4, "w": 4, "x": 20, "y": 0 },
+      "datasource": { "type": "prometheus", "uid": "${DS_REDIS_PROMETHEUS}" },
+      "targets": [
+        {
+          "expr": "redis_total_keys{connection=~\"$connection\"}",
+          "legendFormat": "Keys",
+          "refId": "A"
+        }
+      ],
+      "options": { "reduceOptions": { "calcs": ["lastNotNull"] }, "colorMode": "value", "graphMode": "area" },
+      "fieldConfig": { "defaults": { "unit": "short" } }
+    },
+    {
+      "id": 7,
+      "title": "Ops / sec over time",
+      "type": "timeseries",
+      "gridPos": { "h": 8, "w": 12, "x": 0, "y": 4 },
+      "datasource": { "type": "prometheus", "uid": "${DS_REDIS_PROMETHEUS}" },
+      "targets": [
+        {
+          "expr": "redis_ops_per_sec{connection=~\"$connection\"}",
+          "legendFormat": "ops/sec",
+          "refId": "A"
+        }
+      ],
+      "fieldConfig": { "defaults": { "unit": "ops", "color": { "mode": "palette-classic" } } },
+      "options": { "legend": { "calcs": ["mean", "max"], "displayMode": "list", "placement": "bottom" }, "tooltip": { "mode": "single" } }
+    },
+    {
+      "id": 8,
+      "title": "Memory Used over time",
+      "type": "timeseries",
+      "gridPos": { "h": 8, "w": 12, "x": 12, "y": 4 },
+      "datasource": { "type": "prometheus", "uid": "${DS_REDIS_PROMETHEUS}" },
+      "targets": [
+        {
+          "expr": "redis_memory_used_bytes{connection=~\"$connection\"}",
+          "legendFormat": "Used",
+          "refId": "A"
+        },
+        {
+          "expr": "redis_memory_max_bytes{connection=~\"$connection\"}",
+          "legendFormat": "Max (limit)",
+          "refId": "B"
+        }
+      ],
+      "fieldConfig": { "defaults": { "unit": "bytes", "color": { "mode": "palette-classic" } }, "overrides": [{ "matcher": { "id": "byName", "options": "Max (limit)" }, "properties": [{ "id": "custom.lineStyle", "value": { "fill": "dash" } }, { "id": "color", "value": { "mode": "fixed", "fixedColor": "red" } }] }] },
+      "options": { "legend": { "calcs": ["mean", "max"], "displayMode": "list", "placement": "bottom" } }
+    },
+    {
+      "id": 9,
+      "title": "Keyspace Hits vs Misses",
+      "type": "timeseries",
+      "gridPos": { "h": 8, "w": 12, "x": 0, "y": 12 },
+      "datasource": { "type": "prometheus", "uid": "${DS_REDIS_PROMETHEUS}" },
+      "targets": [
+        {
+          "expr": "rate(redis_keyspace_hits_total{connection=~\"$connection\"}[1m])",
+          "legendFormat": "Hits/sec",
+          "refId": "A"
+        },
+        {
+          "expr": "rate(redis_keyspace_misses_total{connection=~\"$connection\"}[1m])",
+          "legendFormat": "Misses/sec",
+          "refId": "B"
+        }
+      ],
+      "fieldConfig": { "defaults": { "unit": "ops", "color": { "mode": "palette-classic" } }, "overrides": [{ "matcher": { "id": "byName", "options": "Misses/sec" }, "properties": [{ "id": "color", "value": { "mode": "fixed", "fixedColor": "red" } }] }] },
+      "options": { "legend": { "calcs": ["mean"], "displayMode": "list", "placement": "bottom" } }
+    },
+    {
+      "id": 10,
+      "title": "Evictions & Expirations",
+      "type": "timeseries",
+      "gridPos": { "h": 8, "w": 12, "x": 12, "y": 12 },
+      "datasource": { "type": "prometheus", "uid": "${DS_REDIS_PROMETHEUS}" },
+      "targets": [
+        {
+          "expr": "rate(redis_evicted_keys_total{connection=~\"$connection\"}[1m])",
+          "legendFormat": "Evictions/sec",
+          "refId": "A"
+        },
+        {
+          "expr": "rate(redis_expired_keys_total{connection=~\"$connection\"}[1m])",
+          "legendFormat": "Expirations/sec",
+          "refId": "B"
+        }
+      ],
+      "fieldConfig": { "defaults": { "unit": "ops", "color": { "mode": "palette-classic" } }, "overrides": [{ "matcher": { "id": "byName", "options": "Evictions/sec" }, "properties": [{ "id": "color", "value": { "mode": "fixed", "fixedColor": "orange" } }] }] },
+      "options": { "legend": { "calcs": ["mean", "max"], "displayMode": "list", "placement": "bottom" } }
+    }
+  ]
+}

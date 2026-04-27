@@ -3,16 +3,19 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>RedisAtlas — Self-Hosted Redis UI</title>
-  <meta name="description" content="Production-grade self-hosted Redis UI. Browse keys, monitor metrics, run commands — one Docker command." />
-  <meta property="og:title" content="RedisAtlas — Self-Hosted Redis UI" />
-  <meta property="og:description" content="Production-grade self-hosted Redis UI. One Docker command. No SaaS. No data leaving your network." />
+  <title>RedisAtlas — Self-Hosted Redis UI · Docker &amp; Desktop</title>
+  <meta name="description" content="Production-grade self-hosted Redis UI. One Docker command or native desktop app for macOS, Windows &amp; Linux. No SaaS. No data leaving your network." />
+  <meta property="og:title" content="RedisAtlas — Self-Hosted Redis UI · Docker &amp; Desktop" />
+  <meta property="og:description" content="Production-grade self-hosted Redis UI. One Docker command or native desktop app for macOS, Windows &amp; Linux. No SaaS. No data leaving your network." />
   <meta property="og:image" content="https://nexaleaf.github.io/redisatlas/og.png" />
   <meta name="twitter:card" content="summary_large_image" />
+  <link rel="icon" type="image/x-icon" href="favicon.ico" />
+  <link rel="icon" type="image/png" sizes="32x32" href="favicon-32.png" />
+  <link rel="icon" type="image/png" sizes="16x16" href="favicon-16.png" />
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;600&display=swap" rel="stylesheet" />
-   <script async src="https://www.googletagmanager.com/gtag/js?id=G-ND12LMJFVG"></script>
+  <script async src="https://www.googletagmanager.com/gtag/js?id=G-ND12LMJFVG"></script>
   <script>
     window.dataLayer = window.dataLayer || [];
     function gtag(){dataLayer.push(arguments);}
@@ -28,6 +31,7 @@
 
   gtag('config', 'G-ND12LMJFVG');
 </script>
+  
   <style>
     *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
     :root {
@@ -235,6 +239,7 @@
     <li><a href="#roadmap">Roadmap</a></li>
     <li><a href="#screenshots">Screenshots</a></li>
     <li><a href="#install">Install</a></li>
+    <li><a href="#desktop">Desktop</a></li>
     <li><a href="#architecture">Architecture</a></li>
     <li><a href="#config">Config</a></li>
     <li><a href="compare.html">Compare</a></li>
@@ -243,19 +248,20 @@
 </nav>
 
 <section class="hero">
-  <div class="hero-badge">🚀 Open Source · Self-Hosted</div>
+  <div class="hero-badge">🚀 Open Source · Self-Hosted · Desktop App</div>
   <h1>The Redis UI you<br/><span>actually own</span></h1>
-  <p>Production-grade Redis management — browse 100M+ keys, monitor metrics in real-time, manage teams. One Docker command. No SaaS. No data leaving your network.</p>
+  <p>Production-grade Redis management — browse 100M+ keys, monitor metrics in real-time, manage teams. Run via Docker or download the native desktop app for macOS, Windows &amp; Linux. No SaaS. No data leaving your network.</p>
   <div class="badges">
     <img src="https://img.shields.io/docker/pulls/nexaleaf/redisatlas?color=0db7ed&logo=docker&logoColor=white&style=flat-square" alt="Docker Pulls" />
     <img src="https://img.shields.io/docker/image-size/nexaleaf/redisatlas/latest?color=0db7ed&logo=docker&logoColor=white&style=flat-square" alt="Image Size" />
     <img src="https://img.shields.io/badge/license-MIT-green?style=flat-square" alt="License" />
     <img src="https://img.shields.io/badge/node-24-brightgreen?logo=node.js&logoColor=white&style=flat-square" alt="Node" />
-    <img src="https://img.shields.io/badge/platforms-amd64%20%7C%20arm64-blue?style=flat-square" alt="Platforms" />
+    <img src="https://img.shields.io/badge/desktop-macOS%20%7C%20Windows%20%7C%20Linux-blueviolet?logo=electron&logoColor=white&style=flat-square" alt="Desktop" />
   </div>
   <div class="hero-actions">
-    <a class="btn-primary" href="#install">Get Started</a>
-    <a class="btn-outline" href="https://hub.docker.com/r/nexaleaf/redisatlas" target="_blank">View on Docker Hub</a>
+    <a class="btn-primary" href="#install">Get Started with Docker</a>
+    <a class="btn-outline" href="#desktop">⬇ Download Desktop App</a>
+    <a class="btn-outline" href="https://hub.docker.com/r/nexaleaf/redisatlas" target="_blank">Docker Hub</a>
   </div>
   <div class="code-block">
     <button class="copy-btn" onclick="copyHero()">Copy</button>
@@ -280,8 +286,8 @@
 <div class="stats-bar">
   <div class="stat-item"><div class="stat-number">100M+</div><div class="stat-label">Keys supported</div></div>
   <div class="stat-item"><div class="stat-number">1</div><div class="stat-label">Docker command</div></div>
-  <div class="stat-item"><div class="stat-number">30+</div><div class="stat-label">Built-in features</div></div>
-  <div class="stat-item"><div class="stat-number">2</div><div class="stat-label">Platforms (amd64 · arm64)</div></div>
+  <div class="stat-item"><div class="stat-number">40+</div><div class="stat-label">Built-in features</div></div>
+  <div class="stat-item"><div class="stat-number">3</div><div class="stat-label">Desktop platforms</div></div>
   <div class="stat-item"><div class="stat-number">0</div><div class="stat-label">SaaS fees</div></div>
 </div>
 
@@ -306,8 +312,7 @@
       <div class="feature-card"><div class="feature-icon">🔗</div><h3>Multi-Connection</h3><p>Manage multiple Redis servers simultaneously from a single interface.</p></div>
       <div class="feature-card"><div class="feature-icon">👥</div><h3>User Management</h3><p>Role-based access control with admin and viewer roles. Invite team members securely.</p></div>
       <div class="feature-card"><div class="feature-icon">🔒</div><h3>HTTP &amp; HTTPS</h3><p>Auto-detects cert mount and switches modes. Works plain HTTP out of the box, TLS when certs are provided.</p></div>
-      <div class="feature-card"><div class="feature-icon">⚙️</div><h3>Config Viewer</h3><p>Inspect the full Redis server configuration without needing CLI access.</p></div>
-      <div class="feature-card"><div class="feature-icon">🏗️</div><h3>Single Container</h3><p>Frontend, backend, and nginx all in one image. No orchestration required for simple deployments.</p></div>
+      <div class="feature-card"><div class="feature-icon">⚙️</div><h3>Config Editor</h3><p>Inspect and edit the full Redis server configuration inline. Type-aware inputs, dangerous-param warnings, session change history. Admin write, viewer read-only.</p></div>
       <div class="feature-card"><div class="feature-icon">🌊</div><h3>Streams Explorer</h3><p>Full Redis Streams UI — browse entries, manage consumer groups, inspect pending messages, and ACK from the browser.</p></div>
       <div class="feature-card"><div class="feature-icon">🌿</div><h3>Key Patterns</h3><p>Namespace tree-view with key counts, memory usage bars, and one-click drill-down to the Key Explorer with a pre-set match filter.</p></div>
       <div class="feature-card"><div class="feature-icon">♻️</div><h3>Replication</h3><p>Master/replica topology with per-replica lag gauge, sync state, native lag, and replication offset delta — refreshes every 5s.</p></div>
@@ -317,8 +322,11 @@
       <div class="feature-card"><div class="feature-icon">⚡</div><h3>Latency Events</h3><p>LATENCY LATEST table showing event name, latest latency (ms), all-time max, and color-coded health: green &lt;1ms, yellow &lt;10ms, red &gt;10ms.</p></div>
       <div class="feature-card"><div class="feature-icon">⏱️</div><h3>TTL Distribution</h3><p>Histogram of sampled keyspace TTLs across 8 buckets — from &lt;1 min to no-TTL — so you can spot missing or runaway expiry policies.</p></div>
       <div class="feature-card"><div class="feature-icon">📈</div><h3>Memory OOM Tracker</h3><p>Linear-regression projection of memory growth over your history window, with a red maxmemory reference line and estimated time-to-OOM.</p></div>
-      <div class="feature-card"><div class="feature-icon">🔔</div><h3>Alert Rules</h3><p>Create metric threshold alerts (ops/sec, memory, clients) with configurable cooldown. Delivers to log or any Slack-compatible webhook URL.</p></div>
-      <div class="feature-card"><div class="feature-icon">📋</div><h3>Audit Log</h3><p>Admin-only log of all write actions — key deletes, config changes, user management — with action-type filtering and pagination.</p></div>
+      <div class="feature-card"><div class="feature-icon">🛡️</div><h3>ACL Rule Builder</h3><p>Visual editor for Redis ACL users — command categories, key pattern restrictions, password management. No hand-editing of ACL strings required.</p></div>
+      <div class="feature-card"><div class="feature-icon">⚡</div><h3>Redis Functions Editor</h3><p>Load, browse, and test Redis 7+ Lua function libraries. Inline FCALL test runner with keys and args. Delete with confirmation.</p></div>
+      <div class="feature-card"><div class="feature-icon">⏱️</div><h3>TTL Audit Report</h3><p>Scan the keyspace for persistent keys with no TTL. Per-namespace count and estimated memory, with bulk TTL apply action.</p></div>
+      <div class="feature-card"><div class="feature-icon">💰</div><h3>Memory Cost Breakdown</h3><p>Per-namespace encoding distribution with optimization recommendations and estimated savings. CSV export for cost attribution.</p></div>
+      <div class="feature-card"><div class="feature-icon">🔗</div><h3>Webhook Delivery Dashboard</h3><p>Track every outbound alert webhook delivery. Success-rate sparkline, per-row retry, and test-fire to validate endpoints before real alerts trigger.</p></div>
       <div class="feature-card"><div class="feature-icon">🔭</div><h3>Prometheus Endpoint</h3><p>Scrape-ready <code style="font-family:monospace;background:var(--bg3);padding:0.1rem 0.3rem;border-radius:3px;font-size:0.8rem;">/metrics</code> endpoint in text/plain exposition format — plug directly into Prometheus or Grafana Agent.</p></div>
     </div>
   </div>
@@ -394,9 +402,14 @@
         <div class="roadmap-section-head">Analysis &amp; Infrastructure</div>
         <ul class="roadmap-feature-list">
           <li><span class="ico">✅</span> Size Analysis, Large Keys, Hot Keys, TTL Inspector</li>
+          <li><span class="ico">✅</span> TTL Audit Report — persistent key scan with bulk-apply</li>
+          <li><span class="ico">✅</span> Memory Cost Breakdown — encoding distribution + savings estimate</li>
           <li><span class="ico">✅</span> Cluster Topology viewer</li>
-          <li><span class="ico">✅</span> Multi-connection, Config Viewer, Pub/Sub</li>
+          <li><span class="ico">✅</span> Multi-connection, Config Editor (read + write), Pub/Sub</li>
           <li><span class="ico">✅</span> JWT auth, Admin/Viewer RBAC, bcrypt passwords</li>
+          <li><span class="ico">✅</span> ACL Rule Builder — visual Redis ACL management</li>
+          <li><span class="ico">✅</span> Redis Functions Editor — Lua library browser + FCALL test runner</li>
+          <li><span class="ico">✅</span> Webhook Delivery Dashboard — delivery log, retry, test-fire</li>
           <li><span class="ico">✅</span> Redis Streams Explorer — entries, groups, consumers, pending, ACK</li>
           <li><span class="ico">✅</span> Key Pattern Browser — namespace tree-view with usage bars</li>
           <li><span class="ico">✅</span> Replication Dashboard — lag gauge, replica status, master/slave</li>
@@ -465,36 +478,41 @@
     </div>
     <div class="milestone-row">
       <div class="milestone">
-        <div class="milestone-version">v1.1</div>
-        <div class="milestone-theme">Developer Experience</div>
+        <div class="milestone-version">v1.1 – v1.3</div>
+        <div class="milestone-theme">Foundation</div>
         <ul>
-          <li>✅ Key Pattern Browser (namespace tree-view)</li>
-          <li>✅ Redis Streams Explorer (consumer groups)</li>
-          <li>Key Value Diff Viewer</li>
-          <li>Multi-tab CLI Playground</li>
-          <li>Dataset Snapshot (export &amp; restore)</li>
-        </ul>
-      </div>
-      <div class="milestone">
-        <div class="milestone-version">v1.2</div>
-        <div class="milestone-theme">Observability</div>
-        <ul>
-          <li>Keyspace Heatmap (namespace × time)</li>
-          <li>Latency Distribution (P50/P95/P99)</li>
+          <li>✅ Key Pattern Browser (namespace tree)</li>
+          <li>✅ Redis Streams Explorer</li>
           <li>✅ Memory Growth Tracker + OOM ETA</li>
           <li>✅ Replication Lag Dashboard</li>
           <li>✅ Prometheus /metrics endpoint</li>
+          <li>✅ Blocked Client Tracker</li>
+          <li>✅ Persistence Health Monitor</li>
         </ul>
       </div>
       <div class="milestone">
-        <div class="milestone-version">v1.3</div>
-        <div class="milestone-theme">Advanced Debugging</div>
+        <div class="milestone-version">v1.4 ✓ Released</div>
+        <div class="milestone-theme">Operations Completeness</div>
         <ul>
-          <li>Key Lifecycle Tracker</li>
-          <li>Command Latency Heatmap</li>
-          <li>Memory Fragmentation Analyzer</li>
-          <li>✅ Blocked Client Tracker</li>
-          <li>✅ Persistence Health Monitor</li>
+          <li>✅ ACL Rule Builder (visual ACL editor)</li>
+          <li>✅ Redis Functions Editor (Lua)</li>
+          <li>✅ TTL Audit Report + bulk apply</li>
+          <li>✅ Memory Cost Breakdown + CSV</li>
+          <li>✅ Webhook Delivery Dashboard</li>
+          <li>✅ Config Editor (write support)</li>
+          <li>✅ First-time setup wizard</li>
+        </ul>
+      </div>
+      <div class="milestone">
+        <div class="milestone-version">v1.5</div>
+        <div class="milestone-theme">Intelligence &amp; Depth</div>
+        <ul>
+          <li>Predictive Alerting (trend-based)</li>
+          <li>Command Profiler (flame-chart)</li>
+          <li>Data Migration Wizard</li>
+          <li>Vector Search Inspector (Redis 8)</li>
+          <li>Transaction Debugger (WATCH/MULTI)</li>
+          <li>RedisJSON &amp; RediSearch support</li>
         </ul>
       </div>
       <div class="milestone">
@@ -711,13 +729,13 @@
           <div>    <span class="flag">restart:</span> unless-stopped</div>
           <br/>
           <div>  <span class="cmd">postgres:</span></div>
-          <div>    <span class="flag">image:</span> <span class="val">postgres:16-alpine</span></div>
+          <div>    <span class="flag">image:</span> <span class="val">postgres:18-alpine</span></div>
           <div>    <span class="flag">environment:</span></div>
           <div>      <span class="flag">POSTGRES_DB:</span> <span class="val">redisatlas</span></div>
           <div>      <span class="flag">POSTGRES_USER:</span> <span class="val">redisatlas</span></div>
           <div>      <span class="flag">POSTGRES_PASSWORD:</span> <span class="val">change-me</span></div>
           <div>    <span class="flag">volumes:</span></div>
-          <div>      - <span class="val">postgres_data:/var/lib/postgresql/data</span></div>
+          <div>      - <span class="val">postgres_data:/var/lib/postgresql</span></div>
           <div>    <span class="flag">healthcheck:</span></div>
           <div>      <span class="flag">test:</span> <span class="val">['CMD-SHELL', 'pg_isready -U redisatlas']</span></div>
           <div>      <span class="flag">interval:</span> 10s</div>
@@ -730,6 +748,75 @@
         </div>
         <p style="margin-top: 1.25rem; color: var(--muted);">Add <code style="font-family:monospace;background:var(--bg3);padding:0.1rem 0.4rem;border-radius:4px;">DATABASE_URL=postgresql://...</code> to persist data across restarts. Without it the app runs in memory-only mode.</p>
         <div style="margin-top: 1rem;"><div class="code-block" style="max-width: 100%;"><div><span class="cmd">docker compose up</span> <span class="flag">-d</span></div></div></div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section id="desktop" style="background: var(--bg2); border-top: 1px solid var(--border); border-bottom: 1px solid var(--border);">
+  <div class="container">
+    <div class="section-label">Desktop App</div>
+    <h2 class="section-title">Native app for macOS, Windows &amp; Linux</h2>
+    <p class="section-sub">No Docker required. Data stored locally — connections and settings persist across restarts out of the box.</p>
+
+    <div style="display:grid; grid-template-columns: repeat(auto-fit, minmax(220px,1fr)); gap:1.25rem; margin: 2.5rem 0;">
+      <div style="background:var(--bg3); border:1px solid var(--border); border-radius:12px; padding:1.5rem; position:relative;">
+        <div style="font-size:2rem; margin-bottom:0.75rem;">🍎</div>
+        <h3 style="font-size:1rem; font-weight:600; margin-bottom:0.4rem;">macOS</h3>
+        <p style="color:var(--muted); font-size:0.85rem; margin-bottom:0.75rem;">Apple Silicon &amp; Intel · DMG installer</p>
+        <div style="background:#2a1f0e; border:1px solid #7a4f1a; border-radius:8px; padding:0.6rem 0.9rem; font-size:0.8rem; color:#e5a84a; line-height:1.5;">
+          🛠️ We're working on the macOS installer — coming soon!
+        </div>
+      </div>
+      <div style="background:var(--bg3); border:1px solid var(--border); border-radius:12px; padding:1.5rem;">
+        <div style="font-size:2rem; margin-bottom:0.75rem;">🪟</div>
+        <h3 style="font-size:1rem; font-weight:600; margin-bottom:0.4rem;">Windows</h3>
+        <p style="color:var(--muted); font-size:0.85rem; margin-bottom:1rem;">Windows 10/11 x64 · NSIS installer + portable</p>
+        <div style="display:flex; gap:0.5rem; flex-wrap:wrap;">
+          <a href="https://github.com/NexaLeaf/redisatlas-docs/releases/latest/download/RedisAtlas-Setup.exe" target="_blank" style="display:inline-block; background:var(--red); color:#fff; padding:0.5rem 1.25rem; border-radius:6px; font-size:0.85rem; font-weight:600; text-decoration:none;">Installer .exe</a>
+          <a href="https://github.com/NexaLeaf/redisatlas-docs/releases/latest" target="_blank" style="display:inline-block; background:transparent; color:var(--muted); border:1px solid var(--border); padding:0.5rem 1.25rem; border-radius:6px; font-size:0.85rem; font-weight:600; text-decoration:none;">All releases</a>
+        </div>
+      </div>
+      <div style="background:var(--bg3); border:1px solid var(--border); border-radius:12px; padding:1.5rem;">
+        <div style="font-size:2rem; margin-bottom:0.75rem;">🐧</div>
+        <h3 style="font-size:1rem; font-weight:600; margin-bottom:0.4rem;">Linux</h3>
+        <p style="color:var(--muted); font-size:0.85rem; margin-bottom:1rem;">AppImage · .deb · .rpm · x64</p>
+        <div style="display:flex; gap:0.5rem; flex-wrap:wrap;">
+          <a href="https://github.com/NexaLeaf/redisatlas-docs/releases/latest/download/RedisAtlas.AppImage" target="_blank" style="display:inline-block; background:var(--red); color:#fff; padding:0.5rem 1.25rem; border-radius:6px; font-size:0.85rem; font-weight:600; text-decoration:none;">AppImage</a>
+          <a href="https://github.com/NexaLeaf/redisatlas-docs/releases/latest/download/redisatlas.deb" target="_blank" style="display:inline-block; background:transparent; color:var(--muted); border:1px solid var(--border); padding:0.5rem 1.25rem; border-radius:6px; font-size:0.85rem; font-weight:600; text-decoration:none;">.deb</a>
+          <a href="https://github.com/NexaLeaf/redisatlas-docs/releases/latest/download/redisatlas.rpm" target="_blank" style="display:inline-block; background:transparent; color:var(--muted); border:1px solid var(--border); padding:0.5rem 1.25rem; border-radius:6px; font-size:0.85rem; font-weight:600; text-decoration:none;">.rpm</a>
+        </div>
+      </div>
+    </div>
+
+    <div style="display:grid; grid-template-columns: repeat(auto-fit, minmax(200px,1fr)); gap:1rem; margin-bottom:2.5rem;">
+      <div style="display:flex; gap:0.75rem; align-items:flex-start;">
+        <span style="color:var(--green); font-size:1.1rem; margin-top:0.1rem;">✓</span>
+        <div><strong style="font-size:0.9rem;">No Docker needed</strong><p style="color:var(--muted); font-size:0.82rem; margin-top:0.2rem;">Just download and run — no daemon, no containers.</p></div>
+      </div>
+      <div style="display:flex; gap:0.75rem; align-items:flex-start;">
+        <span style="color:var(--green); font-size:1.1rem; margin-top:0.1rem;">✓</span>
+        <div><strong style="font-size:0.9rem;">Local persistence</strong><p style="color:var(--muted); font-size:0.82rem; margin-top:0.2rem;">PGlite stores data on disk — no external database required.</p></div>
+      </div>
+      <div style="display:flex; gap:0.75rem; align-items:flex-start;">
+        <span style="color:var(--green); font-size:1.1rem; margin-top:0.1rem;">✓</span>
+        <div><strong style="font-size:0.9rem;">Auto-updates</strong><p style="color:var(--muted); font-size:0.82rem; margin-top:0.2rem;">Built-in updater checks GitHub Releases on startup.</p></div>
+      </div>
+      <div style="display:flex; gap:0.75rem; align-items:flex-start;">
+        <span style="color:var(--green); font-size:1.1rem; margin-top:0.1rem;">✓</span>
+        <div><strong style="font-size:0.9rem;">System tray</strong><p style="color:var(--muted); font-size:0.82rem; margin-top:0.2rem;">Runs in background, stays accessible from the menu bar.</p></div>
+      </div>
+    </div>
+
+    <div style="background:var(--bg3); border:1px solid var(--border); border-radius:10px; padding:1.25rem 1.5rem; display:flex; align-items:center; gap:1.5rem; flex-wrap:wrap;">
+      <div>
+        <p style="font-size:0.85rem; color:var(--muted); margin-bottom:0.25rem;">Default login credentials</p>
+        <p style="font-family:monospace; font-size:0.9rem;">admin@redisatlas.local &nbsp;/&nbsp; <span style="color:var(--green);">admin</span></p>
+      </div>
+      <div style="height:2rem; width:1px; background:var(--border);"></div>
+      <div>
+        <p style="font-size:0.85rem; color:var(--muted); margin-bottom:0.25rem;">Releases &amp; changelog</p>
+        <a href="https://github.com/NexaLeaf/redisatlas-docs/releases" target="_blank" style="color:var(--blue); font-size:0.9rem; text-decoration:none;">github.com/NexaLeaf/redisatlas-docs/releases →</a>
       </div>
     </div>
   </div>
@@ -803,6 +890,8 @@
   <div class="footer-links">
     <a href="https://hub.docker.com/r/nexaleaf/redisatlas" target="_blank">Docker Hub</a>
     <a href="https://github.com/nexaleaf/redisatlas" target="_blank">GitHub</a>
+    <a href="https://github.com/NexaLeaf/redisatlas-docs/releases" target="_blank">Desktop Releases</a>
+    <a href="#desktop">Desktop App</a>
     <a href="#install">Quick Start</a>
     <a href="#roadmap">Roadmap</a>
     <a href="#config">Docs</a>
@@ -834,7 +923,7 @@
     const commands = {
       http: `docker run -d \\\n  --name redisatlas \\\n  -p 8080:80 \\\n  -e JWT_SECRET=your-secret \\\n  -e ADMIN_PASSWORD=your-password \\\n  --restart unless-stopped \\\n  nexaleaf/redisatlas:latest`,
       https: `mkdir -p certs\nmkcert -cert-file certs/localhost.pem -key-file certs/localhost-key.pem localhost 127.0.0.1\ndocker run -d \\\n  --name redisatlas \\\n  -p 8080:80 -p 8443:443 \\\n  -e JWT_SECRET=your-secret \\\n  -e ADMIN_PASSWORD=your-password \\\n  -v $(pwd)/certs:/etc/nginx/certs:ro \\\n  nexaleaf/redisatlas:latest`,
-      compose: `services:\n  redisatlas:\n    image: nexaleaf/redisatlas:latest\n    ports:\n      - '8080:80'\n    environment:\n      - JWT_SECRET=change-me\n      - ADMIN_PASSWORD=change-me\n      - DATABASE_URL=postgresql://postgres:change-me@postgres:5432/redisatlas\n    depends_on:\n      postgres:\n        condition: service_healthy\n    restart: unless-stopped\n\n  postgres:\n    image: postgres:16-alpine\n    environment:\n      POSTGRES_DB: redisatlas\n      POSTGRES_USER: postgres\n      POSTGRES_PASSWORD: change-me\n    volumes:\n      - postgres_data:/var/lib/postgresql/data\n    healthcheck:\n      test: ['CMD-SHELL', 'pg_isready -U postgres -d redisatlas']\n      interval: 10s\n      timeout: 5s\n      retries: 5\n    restart: unless-stopped\n\nvolumes:\n  postgres_data:`
+      compose: `services:\n  redisatlas:\n    image: nexaleaf/redisatlas:latest\n    ports:\n      - '8080:80'\n    environment:\n      - JWT_SECRET=change-me\n      - ADMIN_PASSWORD=change-me\n      - DATABASE_URL=postgresql://postgres:change-me@postgres:5432/redisatlas\n    depends_on:\n      postgres:\n        condition: service_healthy\n    restart: unless-stopped\n\n  postgres:\n    image: postgres:18-alpine\n    environment:\n      POSTGRES_DB: redisatlas\n      POSTGRES_USER: postgres\n      POSTGRES_PASSWORD: change-me\n    volumes:\n      - postgres_data:/var/lib/postgresql\n    healthcheck:\n      test: ['CMD-SHELL', 'pg_isready -U postgres -d redisatlas']\n      interval: 10s\n      timeout: 5s\n      retries: 5\n    restart: unless-stopped\n\nvolumes:\n  postgres_data:`
     };
     navigator.clipboard.writeText(commands[tab]).then(() => { const btn = event.target; btn.textContent = 'Copied!'; setTimeout(() => btn.textContent = 'Copy', 2000); });
   }
