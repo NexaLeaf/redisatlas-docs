@@ -286,7 +286,7 @@
 <div class="stats-bar">
   <div class="stat-item"><div class="stat-number">100M+</div><div class="stat-label">Keys supported</div></div>
   <div class="stat-item"><div class="stat-number">1</div><div class="stat-label">Docker command</div></div>
-  <div class="stat-item"><div class="stat-number">40+</div><div class="stat-label">Built-in features</div></div>
+  <div class="stat-item"><div class="stat-number">50+</div><div class="stat-label">Built-in features</div></div>
   <div class="stat-item"><div class="stat-number">3</div><div class="stat-label">Desktop platforms</div></div>
   <div class="stat-item"><div class="stat-number">0</div><div class="stat-label">SaaS fees</div></div>
 </div>
@@ -328,6 +328,12 @@
       <div class="feature-card"><div class="feature-icon">💰</div><h3>Memory Cost Breakdown</h3><p>Per-namespace encoding distribution with optimization recommendations and estimated savings. CSV export for cost attribution.</p></div>
       <div class="feature-card"><div class="feature-icon">🔗</div><h3>Webhook Delivery Dashboard</h3><p>Track every outbound alert webhook delivery. Success-rate sparkline, per-row retry, and test-fire to validate endpoints before real alerts trigger.</p></div>
       <div class="feature-card"><div class="feature-icon">🔭</div><h3>Prometheus Endpoint</h3><p>Scrape-ready <code style="font-family:monospace;background:var(--bg3);padding:0.1rem 0.3rem;border-radius:3px;font-size:0.8rem;">/metrics</code> endpoint in text/plain exposition format — plug directly into Prometheus or Grafana Agent.</p></div>
+      <div class="feature-card"><div class="feature-icon">📉</div><h3>Predictive Alerting</h3><p>Linear-regression forecast on metrics history. Alert before a threshold is hit — configure a horizon (e.g. "2 hours") and let the math do the watching.</p></div>
+      <div class="feature-card"><div class="feature-icon">🔥</div><h3>Command Profiler</h3><p>Cross-join of COMMANDSTATS × LATENCY HISTORY. Tier-coloured flame chart (critical / slow / normal / fast) with actionable recommendations per command.</p></div>
+      <div class="feature-card"><div class="feature-icon">🚀</div><h3>Data Migration Wizard</h3><p>Copy keys between Redis instances with SCAN + DUMP/RESTORE. TTL-preserving, pauseable, resumable. Pre-flight validation, live keys/sec progress.</p></div>
+      <div class="feature-card"><div class="feature-icon">🔀</div><h3>Transaction Debugger</h3><p>Step through WATCH/MULTI/EXEC blocks visually. Inject competing writes mid-transaction to test abort handling — without touching production.</p></div>
+      <div class="feature-card"><div class="feature-icon">🔍</div><h3>Vector Search Inspector</h3><p>Browse HNSW/FLAT indexes when RediSearch is installed. FT.SEARCH query builder with field selectors and paginated results.</p></div>
+      <div class="feature-card"><div class="feature-icon">🗂️</div><h3>Search Index Management</h3><p>Create, drop, and query FT indexes through a schema form. RedisJSON + RediSearch module detection with graceful fallback when modules are absent.</p></div>
     </div>
   </div>
 </section>
@@ -416,6 +422,12 @@
           <li><span class="ico">✅</span> Persistence Health — RDB/AOF monitor with RPO estimate</li>
           <li><span class="ico">✅</span> Client Tracker — connected clients, blocked alerts, flag decoder</li>
           <li><span class="ico">✅</span> Prometheus /metrics endpoint</li>
+          <li><span class="ico">✅</span> Predictive Alerting — linear regression forecast on metrics history</li>
+          <li><span class="ico">✅</span> Command Profiler — COMMANDSTATS × LATENCY HISTORY flame chart</li>
+          <li><span class="ico">✅</span> Data Migration Wizard — SCAN + DUMP/RESTORE with TTL preservation</li>
+          <li><span class="ico">✅</span> Transaction Debugger — WATCH/MULTI/EXEC visual step-through</li>
+          <li><span class="ico">✅</span> Vector Search Inspector — RediSearch FT.SEARCH query builder</li>
+          <li><span class="ico">✅</span> Search Index Management — FT.CREATE / FT.DROP with schema form</li>
         </ul>
       </div>
 
@@ -504,15 +516,16 @@
         </ul>
       </div>
       <div class="milestone">
-        <div class="milestone-version">v1.5</div>
+        <div class="milestone-version">v1.5 ✓ Released</div>
         <div class="milestone-theme">Intelligence &amp; Depth</div>
         <ul>
-          <li>Predictive Alerting (trend-based)</li>
-          <li>Command Profiler (flame-chart)</li>
-          <li>Data Migration Wizard</li>
-          <li>Vector Search Inspector (Redis 8)</li>
-          <li>Transaction Debugger (WATCH/MULTI)</li>
-          <li>RedisJSON &amp; RediSearch support</li>
+          <li>✅ Predictive Alerting (linear regression)</li>
+          <li>✅ Command Profiler (flame chart)</li>
+          <li>✅ Data Migration Wizard (DUMP/RESTORE)</li>
+          <li>✅ Transaction Debugger (WATCH/MULTI/EXEC)</li>
+          <li>✅ Vector Search Inspector (RediSearch)</li>
+          <li>✅ RedisJSON &amp; RediSearch Support</li>
+          <li>✅ Enterprise architecture refactor</li>
         </ul>
       </div>
       <div class="milestone">
